@@ -2,9 +2,15 @@ name = "creative-dynasty-events"
 compatibility_date = "2026-09-01"
 pages_build_output_dir = "dist"
 
-# Local dev with functions:
+# Non-secret config read by functions/api/contact.js.
+# TODO: confirm these are the real addresses before launch.
+[vars]
+TO_EMAIL = "hello@creativedynastyevents.com"
+FROM_EMAIL = "Creative Dynasty Website <bookings@creativedynastyevents.com>"
+
+# Local dev with functions (build first, then serve dist/ + functions/):
 #   npm run build
-#   npx wrangler pages dev dist
+#   npm run pages:dev
 #
-# Add secrets (e.g. an email provider API key) with:
+# Add the Resend secret (never goes in this file or git):
 #   npx wrangler pages secret put RESEND_API_KEY

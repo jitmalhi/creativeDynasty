@@ -34,9 +34,10 @@ there and it propagates everywhere.
    ticket/Eventbrite links.
 5. **Contact details** — `src/components/Contact.astro`. Replace the placeholder email,
    phone number, and social links with the real ones. **Do this before launch.**
-6. **Email delivery** — `functions/api/contact.js`. The form works end-to-end today (it
-   validates and returns success) but doesn't send an email yet. Wire up an email provider
-   (Resend is stubbed in as an example) and add its API key as a Cloudflare secret.
+6. **Email delivery** — `wrangler.toml` `[vars]` (`TO_EMAIL` / `FROM_EMAIL`) and the
+   `RESEND_API_KEY` secret — see "Wiring the contact form" below. The form already works
+   end-to-end (validates, returns success); it just silently skips actually sending the
+   email until the key is set.
 
 ## Commands
 
@@ -45,7 +46,9 @@ there and it propagates everywhere.
 | `npm install` | Install dependencies |
 | `npm run dev` | Local dev server at `localhost:4321` |
 | `npm run build` | Build static site to `./dist/` |
-| `npm run preview` | Preview the production build locally |
+| `npm run preview` | Preview the production build locally (static only, no `/api/*`) |
+| `npm run pages:dev` | Build-aware local Cloudflare emulation, `/api/contact` included — run `npm run build` first |
+| `npm run pages:deploy` | Build and push a manual deploy straight to Cloudflare Pages |
 
 ## Deploying to Cloudflare Pages
 
@@ -71,12 +74,19 @@ wrangler pages deploy dist
 Wrangler will detect the `functions/` directory automatically and deploy `/api/contact`
 alongside the static site.
 
-### Contact form email secret
+### Wiring the contact form (Resend)
 
-Once an email provider is wired into `functions/api/contact.js`:
+`functions/api/contact.js` already calls the Resend API — it just needs credentials:
 
-```sh
-wrangler pages secret put RESEND_API_KEY
-```
+1. Create a free [Resend](https://resend.com) account and verify the sending domain
+   (`creativedynastyevents.com`) under Domains, adding the DNS records it gives you.
+2. Create an API key in the Resend dashboard.
+3. Add it as a Pages secret (this prompts for the value; it never touches the repo):
+   ```sh
+   npx wrangler pages secret put RESEND_API_KEY --project-name creative-dynasty-events
+   ```
+4. Confirm `TO_EMAIL` / `FROM_EMAIL` in `wrangler.toml` `[vars]` are the real addresses,
+   then redeploy (`git push`, or `npm run pages:deploy`) so the new vars take effect.
 
-(swap `RESEND_API_KEY` for whichever provider/key name you use).
+Test it any time with `npm run build && npm run pages:dev`, then submit the form at
+`http://127.0.0.1:8788` — the response includes `"delivered": true` once the key is live.

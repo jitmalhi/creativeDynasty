@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "pages:dev": "wrangler pages dev dist",
+    "pages:deploy": "wrangler pages deploy dist"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -17,6 +19,10 @@
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "workerd@1.20260916.1": true
+  },
+  "devDependencies": {
+    "wrangler": "^4.133.0"
   }
 }
