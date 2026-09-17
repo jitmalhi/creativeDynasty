@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core palette — dark, gallery-like, warm gold accent */
+  --color-ink: #0b0a09;
+  --color-ink-soft: #14120f;
+  --color-surface: #1b1815;
+  --color-surface-soft: #24201b;
+  --color-line: #332d25;
+
+  --color-paper: #f6f1e7;
+  --color-smoke: #b9b1a3;
+  --color-smoke-dim: #8a8276;
+
+  --color-gold: #cf9f3f;
+  --color-gold-soft: #e4c374;
+  --color-wine: #6e2740;
+  --color-wine-soft: #9a3e5c;
+
+  --font-display: "Fraunces", "Iowan Old Style", "Georgia", serif;
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-ink);
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-ink);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}

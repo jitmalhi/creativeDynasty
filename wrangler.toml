@@ -1,0 +1,10 @@
+name = "creative-dynasty-events"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "dist"
+
+# Local dev with functions:
+#   npm run build
+#   npx wrangler pages dev dist
+#
+# Add secrets (e.g. an email provider API key) with:
+#   npx wrangler pages secret put RESEND_API_KEY
