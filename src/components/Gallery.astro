@@ -1,5 +1,24 @@
 ---
-import { gallery, galleryCategories } from "../data/gallery";
+// Checkpoint 5: reworked from a uniform 3-column masonry grid (Checkpoint
+// 4's "most visually inert section" finding, and the only section on the
+// site using a filterable card-directory pattern) into an intentional
+// editorial arrangement — one full-width feature image plus a smaller
+// supporting grid, varied proportions instead of six identical tiles.
+//
+// The category filter buttons/JS from the previous version were removed
+// as part of this change, not preserved alongside it: an asymmetric
+// feature-plus-supporting layout and a dynamically-filterable grid pull
+// in opposite directions (filtering the feature image away would leave a
+// dead gap where the layout's whole composition depends on it being
+// there). A curated, editorial mosaic doesn't need interactive filtering
+// to feel premium — most high-end portfolio sections don't have one — and
+// dropping it is also less JavaScript for six placeholder images, which
+// fits this checkpoint's technical-discipline instruction. Categories are
+// still real data (see src/data/gallery.ts) and remain in each image's
+// alt text; only the interactive filter UI was removed.
+import { gallery } from "../data/gallery";
+
+const [feature, ...supporting] = gallery;
 ---
 
 <section id="gallery" class="bg-ink-soft py-24 sm:py-32">
@@ -9,65 +28,40 @@ import { gallery, galleryCategories } from "../data/gallery";
       <h2 class="mt-3 font-display text-balance text-4xl text-paper sm:text-5xl">
         Moments from past gatherings
       </h2>
+      <p class="mt-4 text-smoke">
+        A look at the creativity, connection, and community every Creative Dynasty experience is
+        built around.
+      </p>
     </div>
 
-    <div class="mb-10 flex flex-wrap justify-center gap-2" id="gallery-filters">
-      {
-        galleryCategories.map((cat, i) => (
-          <button
-            type="button"
-            data-filter={cat}
-            aria-pressed={i === 0 ? "true" : "false"}
-            class="filter-btn rounded-full border border-line px-5 py-2 text-sm font-medium text-smoke transition-colors hover:border-gold hover:text-gold data-[active=true]:border-gold data-[active=true]:bg-gold data-[active=true]:text-ink"
-            data-active={i === 0 ? "true" : "false"}
-          >
-            {cat}
-          </button>
-        ))
-      }
-    </div>
+    <div class="grid grid-cols-1 gap-4">
+      {feature && (
+        <figure class="overflow-hidden rounded-2xl border border-line bg-surface">
+          <div class="aspect-[16/9] sm:aspect-[21/9]">
+            <img
+              src={feature.src}
+              alt={feature.alt}
+              loading="lazy"
+              class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+            />
+          </div>
+        </figure>
+      )}
 
-    <div id="gallery-grid" class="columns-1 gap-5 sm:columns-2 lg:columns-3">
-      {
-        gallery.map((item) => (
-          <figure
-            class="gallery-item mb-5 break-inside-avoid overflow-hidden rounded-2xl border border-line bg-surface"
-            data-category={item.category}
-          >
-            <div class="overflow-hidden">
+      <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {supporting.map((item) => (
+          <figure class="overflow-hidden rounded-2xl border border-line bg-surface">
+            <div class="aspect-[4/5]">
               <img
                 src={item.src}
                 alt={item.alt}
                 loading="lazy"
-                class="h-full w-full scale-100 object-cover transition-transform duration-500 hover:scale-105"
+                class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
               />
             </div>
           </figure>
-        ))
-      }
+        ))}
+      </div>
     </div>
   </div>
 </section>
-
-<script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
-  const items = document.querySelectorAll<HTMLElement>(".gallery-item");
-
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const filter = btn.dataset.filter;
-
-      buttons.forEach((b) => {
-        b.dataset.active = "false";
-        b.setAttribute("aria-pressed", "false");
-      });
-      btn.dataset.active = "true";
-      btn.setAttribute("aria-pressed", "true");
-
-      items.forEach((item) => {
-        const show = filter === "All" || item.dataset.category === filter;
-        item.classList.toggle("hidden", !show);
-      });
-    });
-  });
-</script>

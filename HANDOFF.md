@@ -9,7 +9,7 @@ it before doing any further work on this repo.
 
 ---
 
-## Current status: Checkpoint 4 (premium creative/visual audit) complete. See "Checkpoint 4 — Premium Creative / Visual Audit" below. This was an audit-only pass — no redesign, no architecture change. The site is ready for deliberate creative production using this audit as the blueprint.
+## Current status: Checkpoint 5 (controlled creative refinement) complete. See "Checkpoint 5 — Controlled Creative Refinement" below. Every change traces directly to a specific Checkpoint 4 finding — nothing was changed on general creative impulse. Production domain, DNS, and email remain completely untouched.
 
 ### What actually happened, in order
 
@@ -982,8 +982,12 @@ Collective)**
 
 ### Creative Asset Map
 
-Consolidated production plan for the next stage. No images are being
-created yet — this is the plan.
+Consolidated production plan for the next stage. No real images are
+being created yet — this is the plan. Updated Checkpoint 5: the gallery
+row's arrangement changed (feature + supporting, not 6 uniform tiles)
+though its asset count/requirement didn't; the About "Our Story" row's
+status changed from "not built" to "real placeholder in code" now that
+Checkpoint 5 added the actual image slot.
 
 | Asset | Page | Purpose | Orientation | Approx. Ratio | Real Photo / AI | Priority | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -992,8 +996,8 @@ created yet — this is the plan.
 | Little Creators hero/card | Home, Private Bookings, /experiences/little-creators | Differentiate the experience | Portrait | 4:5 | Real, required | CRITICAL | Placeholder only |
 | The Collective hero/card | Home, Private Bookings, /experiences/the-collective | Differentiate the experience | Portrait | 4:5 | Real, required | CRITICAL | Placeholder only |
 | Founder portrait | Home (teaser), About (full) | Personal trust | Portrait (crops to 1:1 + 4:5) | 4:5 original | Real, required, no exceptions | HIGH | Monogram placeholder — no photo exists |
-| Gallery grid (6+ images) | Home | Prove real events happened | Mixed | Mixed, 1000px+ short edge | Real, required, no exceptions | HIGH | 6 gradient placeholders |
-| About "Our Story" image | About | Support brand-origin narrative | Portrait/square | — | Real preferred; may stay text-only | MEDIUM | Not built (text-only currently) |
+| Gallery: 1 feature + 5 supporting images | Home | Prove real events happened | Feature: wide (~21:9); supporting: portrait (4:5) | Feature 1000px+ wide edge; supporting 1000px+ short edge | Real, required, no exceptions | HIGH | 6 gradient placeholders, editorial arrangement (Checkpoint 5) |
+| About "Our Story" image | About | Support brand-origin narrative | Portrait (4:5) | 4:5 | Real preferred; **owner must confirm whether a real founding-era photo exists at all** — "Trust opportunity" | MEDIUM | Placeholder in code (Checkpoint 5) — was text-only before |
 | Experience detail secondary images | Each /experiences/* page | Image/text alternation | Flexible | — | Real preferred; abstract-only AI acceptable | MEDIUM | Not built (one hero image each currently) |
 | Private Bookings hero/support | Private Bookings | Sell the booking experience | Landscape | — | Real preferred | MEDIUM | Not built (no image on this page currently) |
 | Contact texture | Contact | Decorative only | Any | — | **AI appropriate** — abstract only | LOW | Not built |
@@ -1111,6 +1115,271 @@ alongside the creative work rather than requiring their own checkpoint.
 
 ---
 
+## Checkpoint 5 — Controlled Creative Refinement (2026-09-28)
+
+Implements only the specific issues Checkpoint 4 identified — no general
+redesign, no architecture change, no new dependency. Design system tokens
+(color palette, Fraunces/Inter pairing, CTA button semantics), routing,
+form architecture, and the Private Bookings page structure are all
+unchanged. Ecoverdevaleting.co.uk was used only as the original quality
+benchmark carried through prior checkpoints — nothing new copied from it.
+
+### Changes implemented
+
+Full list, each tied to a specific Checkpoint 4 finding:
+
+1. **Home — "Why Choose Us" redesigned** from the centered eyebrow+
+   heading+paragraph formula (identical in shape to "Rooted in
+   Community") into an asymmetric large-heading/supporting-paragraph
+   split. Same verified words, no eyebrow label, no new content.
+2. **Home — founder teaser repositioned** from after "Rooted in
+   Community" (~60–70% down the page) to right after "Why Choose Us,"
+   before the experience cards — per Checkpoint 4's own founder-
+   visibility recommendation.
+3. **Experience pages — visual identity added** via new `accent`
+   (gold/wine — existing tokens only), `imageSide`, and `leadWith` fields
+   in `src/data/experiences.ts`, consumed by the one shared
+   `[slug].astro` template. After Dark reads wine-accented,
+   atmosphere-first, image-right; Little Creators and The Collective
+   read gold-accented, audience-first, differing in image side. Still one
+   template, one component — see "Experience-page differentiation" below
+   for the full reasoning.
+4. **Experience-page FAQ replaced**, not just reworded — see "FAQ
+   decision" below.
+5. **About — Mission redesigned** into a large standalone pull-quote-
+   style statement (no eyebrow, no card) — deliberately different from
+   Home's fix so About isn't just a copy of the same variation.
+6. **About — "Our Story" gained an image slot** (previously text-only) in
+   an asymmetric two-column layout matching the Founder section's
+   established pattern — see "About/origin refinement" below.
+7. **Events — categories restructured** from a 3-column card grid
+   (identical treatment to About's pillars and Contact's help cards, and
+   sitting directly above the testimonials grid — the single most
+   blatant back-to-back repetition on the site) into a numbered list,
+   reusing Private Bookings' own praised "How It Works" pattern rather
+   than inventing a new one.
+8. **Events — stronger intro and private-booking transition added** (see
+   "Events-page refinement" below) — no invented events, no artificial
+   urgency.
+9. **Contact — help cards restructured** from a third instance of the
+   same 3-column card grid into a compact divided row.
+10. **Gallery — rebuilt as an editorial mosaic** (one full-width feature
+    image + a smaller supporting grid) instead of a uniform 6-tile
+    masonry grid, and its category filter UI was removed — see "Gallery
+    refinement" below for why.
+11. **Hero heading mobile size reduced** (`text-5xl` → `text-4xl` base) —
+    see "Mobile considerations."
+12. **Button mobile width made consistent, contextually** — paired CTAs
+    (Home's final CTA, Contact's bottom buttons, the 404 page, the
+    experience-page hero CTAs) now go full-width on mobile like Hero's
+    always did; standalone single CTAs were deliberately left
+    content-width, since Checkpoint 4 found forcing those full-width
+    looked worse, not better.
+13. **A real, previously-undiscovered broken link fixed**: found while
+    working on the Events page — `href="#contact"` was a leftover
+    same-page anchor from before the site had multiple routes, pointing
+    nowhere once `/contact` became its own page. Checkpoint 3's link
+    sweep only checked `href="/..."` patterns and missed this bare-anchor
+    form; re-swept the whole codebase for the same pattern and found no
+    other instances. Fixed to `/private-bookings#request`.
+14. **A documentation bug fixed in this file**: the "## Governing rules"
+    header itself had been accidentally dropped during a Checkpoint 4
+    edit, leaving its bullet list orphaned under the wrong section.
+    Restored.
+
+### Section-heading variation
+
+Reviewed every page for "approximately one meaningful opportunity," per
+instruction — not applied uniformly. Landed on: Home (Why Choose Us →
+asymmetric split), About (Mission → large standalone statement), Events
+(Categories → numbered list instead of a card grid), Contact (help cards
+→ compact row instead of a card grid). **Private Bookings and the
+experience pages were left alone here** — Private Bookings per explicit
+instruction (already the site's strongest rhythm), and the experience
+pages' heading treatment is addressed instead through the accent-color
+system (see below), which was judged the more meaningful variation for
+that template. The standard centered `SectionHeading` component itself
+was not removed or replaced — it's still used everywhere it wasn't
+specifically identified as a repetition problem (About's pillars/values
+grids, Private Bookings' sections, the "How It Works" patterns), which is
+correct: consistent brand language, varied only where Checkpoint 4
+specifically flagged near-duplication.
+
+### Experience-page differentiation
+
+Kept the single shared template (`src/pages/experiences/[slug].astro`) —
+no new page architecture. Differentiation is entirely data-driven from
+three new fields on each `Experience` record:
+
+- **`accent`** (`gold` | `wine`, existing tokens only): colors the
+  eyebrow badge, the "Who It's For" pills, and the new booking-step
+  circles. After Dark uses `wine` (moody, matches "Bold. Expressive.
+  Unforgettable."); Little Creators and The Collective use `gold`.
+- **`imageSide`** (`left` | `right`): mirrors the hero layout via CSS
+  `order` utilities. This is safe to do with CSS-only reordering because
+  the hero image is decorative (`alt=""`) — it contributes nothing to
+  the accessible reading order regardless of visual position.
+- **`leadWith`** (`who` | `expect`): controls which two-column block —
+  "Who It's For"/"What's Included" or "What to Expect" — appears first.
+  **This one is implemented with real duplicated markup, not CSS
+  `order`** — both blocks are meaningful text content, and visually
+  reordering without also reordering the DOM would create a mismatch
+  between what's seen and what's read/tabbed to (a genuine accessibility
+  regression this checkpoint specifically warned against introducing).
+
+Result: three pages that read as "three experiences from the same
+company" (identical layout skeleton, identical component system) rather
+than "the same page copied three times" (no page has identical color
+accent + image side + section order to either of the other two).
+
+### FAQ decision
+
+Per instruction, inspected the verified source material first rather
+than reaching for generic questions. Conclusion: there genuinely isn't
+enough experience-specific verified information beyond what's already
+shown as bullets/pills on the same page (overview, whatToExpect,
+whoItsFor, whatsIncluded — `AUDIT.md` §4 has nothing more granular per
+experience). But one thing *is* verified and genuinely absent from these
+pages: **how booking actually works** — the 3-step process
+(Submit → Customize → Show Up & Enjoy) only appeared on
+`/private-bookings` before this checkpoint. Replaced the redundant FAQ
+with a "How to Book [Experience Name]" section using that verified,
+identical-for-all-three process, styled with the same numbered-circle
+pattern as Private Bookings' own "How It Works" (color-coded per
+experience via the accent field). This is new, useful information on the
+page it now appears on, not a restatement, and not fabricated — it's the
+same verified process already used elsewhere, just newly visible at the
+point in the journey where someone has decided they're interested in a
+specific experience. `FAQ.astro` (the native `<details>` accordion
+component) is no longer used anywhere but was **not deleted** — it's a
+real, tested, accessible component, retained for when the owner provides
+genuine experience-specific FAQ content (session length, cancellation
+policy, etc. — flagged as a trust opportunity in Checkpoint 4).
+
+### Gallery refinement
+
+Rebuilt from a uniform 3-column masonry grid with interactive category
+filtering into one full-width feature image (16:9 → 21:9 aspect) plus a
+4-column supporting grid of five smaller images (4:5 aspect) below —
+varied proportions, an intentional focal point, matching the "full-width
+feature image + supporting smaller images" option from the instruction.
+**The category filter buttons and JS were removed**, not preserved
+alongside the new layout: an asymmetric feature-plus-supporting
+composition and a dynamically-filterable grid actively conflict (filter
+away the feature image and the whole composition's anchor disappears,
+leaving a dead gap). A curated editorial mosaic doesn't need interactive
+filtering to read as premium, and removing it is also strictly less
+JavaScript for six placeholder images — consistent with this
+checkpoint's technical-discipline instruction. The category data
+(`src/data/gallery.ts`) is unchanged and still real — each image's alt
+text still states its verified category — only the interactive filter UI
+is gone. Still placeholder imagery throughout; no images were sourced or
+generated.
+
+### About/origin refinement
+
+Added an image slot to "Our Story" (previously three paragraphs, zero
+visual support — Checkpoint 4's specific finding) in an asymmetric
+two-column layout reusing the pattern already established for the
+Founder section, rather than inventing a new layout idea. **Whether a
+real founding-era photograph actually exists was not assumed** — this
+remains an open question, logged in the Creative Asset Map below as
+"Trust opportunity — owner verification required," exactly as
+Checkpoint 4 flagged it. A neutral placeholder occupies the slot until
+that's answered; if the answer is "no such photo exists," the slot can
+be dropped without touching the rest of the layout, or a different
+approved image (e.g., a duplicate of the founder portrait) can fill it.
+
+### Events-page refinement
+
+Two changes, both explicitly scoped to avoid inventing events or
+urgency: (1) added one sentence under the empty-state heading —
+"Public events are announced here as soon as they're scheduled — in the
+meantime, every experience is available to book privately, any time" —
+a description of how the page itself works, not a claim about event
+frequency or availability; (2) added a closing section, "Don't want to
+wait for a public event?", transitioning directly to a private-booking
+CTA. The empty state itself (the core honest "no events" message) is
+unchanged. **No event cards were added, invented, or implied.**
+
+### Contact-page refinement
+
+The three "How Can We Help?" cards — previously visually identical to
+About's pillar cards and Events' (former) category cards — are now a
+single compact divided row instead of a third instance of the same
+bordered-card grid. No content, no contact information, and no wording
+changed. The owner-confirmation state of email/phone/social is
+completely unchanged — still exactly what Checkpoint 3 and 4 documented,
+nothing newly resolved or newly invented.
+
+### Mobile considerations (still code-level — no device/browser tool available this session)
+
+Two previously-flagged judgment calls were implemented this checkpoint,
+each with the reasoning stated inline in the code and here:
+
+- **Hero heading size** reduced from `text-5xl` to `text-4xl` base.
+  Checkpoint 4's character-width estimate suggested "Immersive
+  Gatherings." alone was wider than a 375px screen's available width at
+  the old size, likely forcing 3+ line wraps. Not device-verified — a
+  real narrow-phone check is still worth doing before final sign-off.
+- **Button mobile width**, implemented as a context-aware fix (see
+  "Changes implemented" #12) rather than the global change tried and
+  reverted in Checkpoint 4.
+
+All other structural changes (asymmetric image/text sections, the
+gallery mosaic, the numbered Events list) collapse to single-column
+stacks below their respective breakpoints using the same responsive
+utility patterns already used sitewide — reviewed for the same failure
+modes as Checkpoint 3 (fixed widths, unguarded `min-w`, forced
+`nowrap`), none found. **Still not device-verified**: actual visual
+crop/feel on a real 375–430px screen.
+
+### Photography still required
+
+Unchanged in substance from the Checkpoint 4 Creative Asset Map — see
+below for the one addition (the About "Our Story" image slot is now real
+code, not just a planned table row) and one status update (the gallery's
+required assets are the same 6+ photos, just arranged differently).
+
+### Owner information still required
+
+Unchanged: contact email spelling, phone/address, real Facebook URL,
+Instagram currency, founder photo approval, general photography
+approval, and the two Checkpoint 4 trust-opportunity flags (a real
+founding-era photo for About, and genuine operational FAQ content). This
+checkpoint was implementation of already-identified creative fixes, not
+new content work, so nothing here changed.
+
+### Anything deliberately left unchanged
+
+- **Private Bookings' page structure** — untouched per explicit
+  instruction; it was already the site's strongest internal rhythm.
+- **The design system's core tokens** — color palette, Fraunces/Inter
+  pairing, CTA button variants/hierarchy, spacing scale, container
+  widths — none were touched.
+- **Routing architecture and form architecture** — unchanged; the
+  general-contact vs. private-booking split from Checkpoint 2 stands as
+  is.
+- **All verified content/copy** — every word is either identical to
+  before or, where reformatted (Home's merged eyebrow+heading, the
+  Mission pull-quote), uses the exact same verified words, just
+  typeset differently.
+- **`FAQ.astro`** — not deleted despite losing its only usage; retained
+  for real future FAQ content (see "FAQ decision").
+- **`galleryCategories`** export in `src/data/gallery.ts` — not deleted
+  despite losing its only usage; kept as the documented reference
+  taxonomy (see inline comment).
+
+**This site remains pre-launch.** The temporary preview
+(`https://creativedynasty.pages.dev`) will reflect these changes once
+this commit deploys. The production domain, DNS (nameservers, MX, SPF,
+DKIM, DMARC), and production email were not touched in this checkpoint,
+consistent with every prior one.
+
+---
+
+## Governing rules for this project (do not deviate without the user's say-so)
+
 - Audit before implementing (Checkpoint 1 — done, see `AUDIT.md`).
 - Never invent events, dates, locations, testimonials, partnerships,
   awards, numbers, reviews, pricing, or credentials. Unknowns are marked
@@ -1161,12 +1430,21 @@ above for the full route table (`/`, `/about`, `/events`,
 ## Components (current)
 
 - `src/components/` — `Header` (multi-page nav + Experiences dropdown),
-  `Hero`, `CredibilityStrip`, `Gallery` (filterable), `Events`, `Footer`.
+  `Hero`, `CredibilityStrip`, `Gallery` (editorial feature + supporting
+  grid, Checkpoint 5 — no longer filterable, see HANDOFF Checkpoint 5 for
+  why), `Events`, `Footer`.
 - `src/components/ui/` — shared primitives: `Button`, `SectionHeading`,
   `PageHero`, `ExperienceCard`, `Testimonial`, `TestimonialsGrid`,
-  `Founder`, `FAQ`, `ContactInfoPanel`.
-- `src/components/home/` — Home-only sections: `WhyChooseUs`,
-  `SignatureExperiences`, `RootedInCommunity`, `FounderTeaser`, `FinalCTA`.
+  `Founder`, `ContactInfoPanel`, and `FAQ` (currently unused —
+  intentionally retained for future real FAQ content, see Checkpoint 5).
+- `src/components/home/` — Home-only sections: `WhyChooseUs` (asymmetric
+  editorial treatment, Checkpoint 5), `SignatureExperiences`,
+  `RootedInCommunity`, `FounderTeaser` (moved earlier in page order,
+  Checkpoint 5), `FinalCTA`.
+- The three experience detail pages (`src/pages/experiences/[slug].astro`)
+  are one shared template, differentiated by `accent`/`imageSide`/
+  `leadWith` fields on each `Experience` record — not three separate
+  page files.
 
 ## SEO status
 

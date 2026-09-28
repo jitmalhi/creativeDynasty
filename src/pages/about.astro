@@ -48,23 +48,35 @@ const values = [
     />
 
     <section class="bg-ink py-20 sm:py-28">
-      <div class="mx-auto max-w-3xl px-6 lg:px-10">
-        <SectionHeading eyebrow="Our Story" heading="How It Started" align="left" />
-        <div class="space-y-5 text-smoke">
-          <p>
-            Creative Dynasty Events was built on the belief that creativity has the power to
-            bring people together. What started as a passion for art has grown into a platform
-            that creates meaningful experiences where people can connect, express themselves,
-            and enjoy something different.
-          </p>
-          <p>
-            Each event is intentionally designed to feel welcoming, engaging, and memorable,
-            bringing together creativity, conversation, and shared moments around food.
-          </p>
-          <p class="font-medium text-paper">
-            Creative Dynasty was nominated for the <span class="text-gold">2026 Visual Arts
-            Award</span> from The Lotus Hope Foundation.
-          </p>
+      <div class="mx-auto grid max-w-5xl grid-cols-1 items-center gap-10 px-6 lg:grid-cols-[1fr_1.2fr] lg:px-10">
+        <!--
+          Checkpoint 5: this section was previously text-only (Checkpoint 4
+          finding — "zero visual support" on the page most fundamentally
+          about the brand's origin). Added an image slot; whether a real
+          founding-era photo exists is flagged as a trust opportunity
+          requiring owner verification in HANDOFF.md, not assumed.
+        -->
+        <div class="order-2 mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-line lg:order-1 lg:max-w-none">
+          <img src="/images/about-story.svg" alt="" class="h-full w-full object-cover" />
+        </div>
+        <div class="order-1 lg:order-2">
+          <SectionHeading eyebrow="Our Story" heading="How It Started" align="left" />
+          <div class="space-y-5 text-smoke">
+            <p>
+              Creative Dynasty Events was built on the belief that creativity has the power to
+              bring people together. What started as a passion for art has grown into a platform
+              that creates meaningful experiences where people can connect, express themselves,
+              and enjoy something different.
+            </p>
+            <p>
+              Each event is intentionally designed to feel welcoming, engaging, and memorable,
+              bringing together creativity, conversation, and shared moments around food.
+            </p>
+            <p class="font-medium text-paper">
+              Creative Dynasty was nominated for the <span class="text-gold">2026 Visual Arts
+              Award</span> from The Lotus Hope Foundation.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -97,13 +109,19 @@ const values = [
       </div>
     </section>
 
-    <section class="bg-ink-soft py-20 sm:py-28">
+    <!--
+      Checkpoint 5: large standalone display-heading treatment — no
+      eyebrow label, no card, just the statement at manifesto scale.
+      Deliberately different from WhyChooseUs's asymmetric-split fix on
+      Home, so About doesn't just copy that same variation.
+    -->
+    <section class="bg-ink-soft py-24 sm:py-32">
       <div class="mx-auto max-w-3xl px-6 text-center lg:px-10">
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Our Mission</p>
-        <p class="mt-5 font-display text-balance text-2xl text-paper sm:text-3xl">
-          To create experiences that connect people, inspire creativity, and build stronger
-          communities through shared moments and meaningful interaction.
+        <p class="font-display text-balance text-3xl leading-tight text-paper sm:text-4xl lg:text-5xl">
+          "To create experiences that connect people, inspire creativity, and build stronger
+          communities through shared moments and meaningful interaction."
         </p>
+        <p class="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Our Mission</p>
       </div>
     </section>
 

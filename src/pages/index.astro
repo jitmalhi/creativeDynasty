@@ -24,10 +24,16 @@ const homeTestimonials = testimonials.filter((t) => t.name);
     <Hero />
     <CredibilityStrip />
     <WhyChooseUs />
+    <!--
+      Checkpoint 5: FounderTeaser moved here (was after RootedInCommunity,
+      ~60-70% down the page) per Checkpoint 4's own recommendation —
+      establish trust in the person behind the brand before the sales
+      pitch (experience cards, gallery), not after.
+    -->
+    <FounderTeaser />
     <SignatureExperiences />
     <Gallery />
     <RootedInCommunity />
-    <FounderTeaser />
     <TestimonialsGrid items={homeTestimonials} />
     <FinalCTA />
   </main>

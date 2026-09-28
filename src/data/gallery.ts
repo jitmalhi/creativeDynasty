@@ -8,7 +8,10 @@ export type GalleryItem = {
 // Events page filters exactly (ALL / SIGNATURE / SOCIAL / FAMILY / PRIVATE).
 // The pre-audit build used invented categories ("Sip & Paint", "Private
 // Socials", "Galas") that don't correspond to anything on the real site —
-// those have been replaced, not renamed.
+// those have been replaced, not renamed. Currently documentation-only —
+// Checkpoint 5 removed the gallery's interactive category filter (see
+// Gallery.astro) in favor of a curated editorial layout, so nothing
+// imports this array today, but it's kept as the reference taxonomy.
 export const galleryCategories = ["All", "Signature", "Social", "Family", "Private"] as const;
 
 // UNSUPPORTED/FABRICATED CONTENT REMOVED: the previous alt text described

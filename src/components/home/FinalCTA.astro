@@ -9,9 +9,18 @@ import Button from "../ui/Button.astro";
     <h2 class="font-display text-balance text-4xl text-paper sm:text-5xl">
       Ready to Experience It for Yourself?
     </h2>
+    <!--
+      Checkpoint 5: w-full sm:w-auto on paired buttons only (not
+      Button.astro's default) — Checkpoint 4 found Hero.astro's CTAs go
+      full-width on mobile while every Button.astro usage stayed
+      content-width, and a global fix was tried and reverted because most
+      Button usages are standalone single CTAs where full-width looks
+      worse. This pair, like Hero's, is two CTAs stacked in a row — the
+      case where full-width is actually an improvement.
+    -->
     <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-      <Button href="/events" variant="primary">Book Your Spot</Button>
-      <Button href="/contact" variant="secondary">Partner With Us</Button>
+      <Button href="/events" variant="primary" class="w-full sm:w-auto">Book Your Spot</Button>
+      <Button href="/contact" variant="secondary" class="w-full sm:w-auto">Partner With Us</Button>
     </div>
   </div>
 </section>

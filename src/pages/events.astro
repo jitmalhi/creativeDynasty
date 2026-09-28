@@ -10,6 +10,7 @@ import Footer from "../components/Footer.astro";
 import PageHero from "../components/ui/PageHero.astro";
 import SectionHeading from "../components/ui/SectionHeading.astro";
 import TestimonialsGrid from "../components/ui/TestimonialsGrid.astro";
+import Button from "../components/ui/Button.astro";
 import Events from "../components/Events.astro";
 import { testimonials } from "../data/testimonials";
 
@@ -46,19 +47,33 @@ const eventsTestimonials = testimonials.filter((t) => !t.name);
 
     <Events />
 
+    <!--
+      Checkpoint 5: was a 3-column bordered-card grid, identical in
+      treatment to About's pillars and Contact's help cards, and sitting
+      directly above another 3-column grid (testimonials) below — the
+      most blatant back-to-back repetition on the site (Checkpoint 4
+      finding). Reworked as a compact numbered list instead, reusing the
+      pattern already established (and praised) on Private Bookings'
+      "How It Works" rather than inventing a new visual treatment.
+    -->
     <section class="bg-ink-soft py-20 sm:py-28">
-      <div class="mx-auto max-w-6xl px-6 lg:px-10">
+      <div class="mx-auto max-w-3xl px-6 lg:px-10">
         <SectionHeading eyebrow="Categories" heading="Find the Experience That Fits You" />
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <ol class="divide-y divide-line border-y border-line">
           {
-            categories.map((c) => (
-              <div class="rounded-3xl border border-line bg-surface p-8">
-                <h3 class="font-display text-xl text-paper">{c.title}</h3>
-                <p class="mt-3 text-sm text-smoke">{c.body}</p>
-              </div>
+            categories.map((c, i) => (
+              <li class="flex gap-5 py-6">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/40 font-display text-base text-gold">
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 class="font-display text-lg text-paper">{c.title}</h3>
+                  <p class="mt-1.5 text-sm text-smoke">{c.body}</p>
+                </div>
+              </li>
             ))
           }
-        </div>
+        </ol>
       </div>
     </section>
 
@@ -67,6 +82,21 @@ const eventsTestimonials = testimonials.filter((t) => !t.name);
       eyebrow="What People Are Saying"
       heading="From Past Events"
     />
+
+    <!-- Checkpoint 5: stronger private-booking transition, per instruction. -->
+    <section class="bg-ink-soft py-16">
+      <div class="mx-auto max-w-xl px-6 text-center lg:px-10">
+        <h2 class="font-display text-balance text-2xl text-paper sm:text-3xl">
+          Don't want to wait for a public event?
+        </h2>
+        <p class="mt-3 text-smoke">
+          Book a private experience for your own group, any time.
+        </p>
+        <div class="mt-6">
+          <Button href="/private-bookings" variant="primary">Book a Private Experience</Button>
+        </div>
+      </div>
+    </section>
   </main>
   <Footer />
 </Layout>

@@ -16,6 +16,17 @@ export type Experience = {
   whoItsFor: string[];
   whatsIncluded: string[];
   cta: string;
+  /**
+   * Presentation-only visual-identity fields (Checkpoint 5) — no new
+   * colors, only the existing gold/wine accent tokens already used
+   * sitewide. Gives the shared experience-page template subtle,
+   * per-experience variation without three separate page architectures.
+   * See HANDOFF.md "Checkpoint 5" for the reasoning behind each value.
+   */
+  accent: "gold" | "wine";
+  imageSide: "left" | "right";
+  /** Which two-column block reads first: audience-first ("who") or atmosphere-first ("expect"). */
+  leadWith: "who" | "expect";
 };
 
 export const experiences: Experience[] = [
@@ -47,6 +58,12 @@ export const experiences: Experience[] = [
       "Full experience setup",
     ],
     cta: "Book This Experience",
+    // Moody/adults-only tone ("Bold. Expressive. Unforgettable.") — wine
+    // accent, atmosphere-first framing, image on the right (the default
+    // reading order for the first card in the set).
+    accent: "wine",
+    imageSide: "right",
+    leadWith: "expect",
   },
   {
     slug: "little-creators",
@@ -66,6 +83,12 @@ export const experiences: Experience[] = [
     whoItsFor: ["Parents & children", "Families", "Community groups", "Youth programs"],
     whatsIncluded: ["All materials", "Guided instruction", "Meal included", "Creative, safe environment"],
     cta: "Book This Experience",
+    // Warm/family tone — gold accent, audience-first framing ("this is for
+    // families like yours" before logistics), image leads on the left for
+    // a welcoming, visual-first first impression.
+    accent: "gold",
+    imageSide: "left",
+    leadWith: "who",
   },
   {
     slug: "the-collective",
@@ -85,6 +108,12 @@ export const experiences: Experience[] = [
     whoItsFor: ["Entrepreneurs & creatives", "Corporate teams", "Community groups", "Organizations"],
     whatsIncluded: ["All materials", "Guided experience", "Meal included", "Customizable format"],
     cta: "Submit a Booking Request",
+    // Networking/collaboration tone — gold accent (distinct from After
+    // Dark's wine), audience-first framing (who you'll meet/network with
+    // is the draw), image on the right to differ from Little Creators.
+    accent: "gold",
+    imageSide: "right",
+    leadWith: "who",
   },
 ];
 

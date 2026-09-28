@@ -3,11 +3,26 @@
 // what's-included copy comes from src/data/experiences.ts, itself sourced
 // verbatim from each experience's live detail page. No pricing, capacity,
 // or guarantees are shown — none were confirmed by the audit.
+//
+// Checkpoint 5: the "Good to Know" FAQ here used to restate the
+// whoItsFor/whatToExpect bullets shown seconds earlier on this same page
+// (Checkpoint 4 finding). Inspected the verified source material for a
+// genuinely new question and found one: how booking actually works isn't
+// shown anywhere on this page today — it only lives on /private-bookings.
+// Replaced the redundant FAQ with that (verified, 3-step, identical
+// process for all three experiences) instead of inventing new Q&A pairs.
+//
+// The Who/What-to-Expect order below is swapped with real duplicated
+// markup (not a CSS `order` trick) deliberately — both blocks are
+// meaningful text content, and reordering only visually (not in the DOM)
+// would create a reading-order/visual-order mismatch for screen reader
+// and keyboard users. The hero image reorder further down IS done with
+// CSS `order`, which is fine there since the image is decorative
+// (`alt=""`) and contributes nothing to the accessible reading order.
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import Button from "../../components/ui/Button.astro";
-import FAQ from "../../components/ui/FAQ.astro";
 import { experiences } from "../../data/experiences";
 
 export function getStaticPaths() {
@@ -19,10 +34,15 @@ export function getStaticPaths() {
 
 const { exp } = Astro.props;
 
-const faqItems = [
-  { question: "Who is this experience for?", answer: exp.whoItsFor.join(" · ") },
-  { question: "What should I expect?", answer: exp.whatToExpect.join(" · ") },
-  { question: "What's included?", answer: exp.whatsIncluded.join(" · ") },
+const accentBadge =
+  exp.accent === "wine" ? "border-wine-soft/50 text-wine-soft" : "border-gold/40 text-gold";
+
+// VERIFIED (AUDIT.md §4) — the 3-step process from /private-bookings,
+// which applies identically to booking any of the three experiences.
+const bookingSteps = [
+  { title: "Submit Your Request", body: "Tell us about your event, group size, and preferred date." },
+  { title: "Customize Your Experience", body: "We tailor the experience, including theme and food options." },
+  { title: "Show Up & Enjoy", body: "We handle everything so you can focus on the experience." },
 ];
 ---
 
@@ -31,20 +51,20 @@ const faqItems = [
   <main>
     <section class="relative overflow-hidden border-b border-line bg-ink-soft pb-16 pt-36 sm:pb-20 sm:pt-44">
       <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 lg:grid-cols-2 lg:px-10">
-        <div class="text-center lg:text-left">
-          <p class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+        <div class={`text-center lg:text-left ${exp.imageSide === "left" ? "lg:order-2" : "lg:order-1"}`}>
+          <p class={`mb-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${accentBadge}`}>
             {exp.emoji} Signature Experience
           </p>
           <h1 class="font-display text-balance text-4xl text-paper sm:text-5xl">{exp.name}</h1>
           <p class="mt-4 text-balance text-lg text-gold-soft">{exp.tagline}</p>
           <p class="mt-5 max-w-lg text-smoke lg:mx-0">{exp.overview}</p>
           <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
-            <Button href="/private-bookings#request" variant="primary">{exp.cta}</Button>
-            <Button href="/events" variant="secondary">View Upcoming Dates</Button>
+            <Button href="/private-bookings#request" variant="primary" class="w-full sm:w-auto">{exp.cta}</Button>
+            <Button href="/events" variant="secondary" class="w-full sm:w-auto">View Upcoming Dates</Button>
           </div>
         </div>
 
-        <div class="mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-line">
+        <div class={`mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-line ${exp.imageSide === "left" ? "lg:order-1" : "lg:order-2"}`}>
           <img src={exp.image} alt="" class="h-full w-full object-cover" />
         </div>
       </div>
@@ -52,55 +72,82 @@ const faqItems = [
 
     <section class="bg-ink py-20 sm:py-28">
       <div class="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-6 sm:grid-cols-2 lg:px-10">
+        {exp.leadWith === "who" && (
+          <div>
+            <h2 class="font-display text-2xl text-paper">Who It's For</h2>
+            <ul class="mt-5 flex flex-wrap gap-2">
+              {exp.whoItsFor.map((item) => (
+                <li class={`rounded-full border px-3 py-1.5 text-sm font-medium ${accentBadge}`}>{item}</li>
+              ))}
+            </ul>
+            <h2 class="mt-10 font-display text-2xl text-paper">What's Included</h2>
+            <ul class="mt-5 space-y-3">
+              {exp.whatsIncluded.map((item) => (
+                <li class="flex items-start gap-3 text-smoke">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div>
           <h2 class="font-display text-2xl text-paper">What to Expect</h2>
           <ul class="mt-5 space-y-3">
-            {
-              exp.whatToExpect.map((item) => (
+            {exp.whatToExpect.map((item) => (
+              <li class="flex items-start gap-3 text-smoke">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {exp.leadWith === "expect" && (
+          <div>
+            <h2 class="font-display text-2xl text-paper">Who It's For</h2>
+            <ul class="mt-5 flex flex-wrap gap-2">
+              {exp.whoItsFor.map((item) => (
+                <li class={`rounded-full border px-3 py-1.5 text-sm font-medium ${accentBadge}`}>{item}</li>
+              ))}
+            </ul>
+            <h2 class="mt-10 font-display text-2xl text-paper">What's Included</h2>
+            <ul class="mt-5 space-y-3">
+              {exp.whatsIncluded.map((item) => (
                 <li class="flex items-start gap-3 text-smoke">
                   <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   {item}
                 </li>
-              ))
-            }
-          </ul>
-        </div>
-
-        <div>
-          <h2 class="font-display text-2xl text-paper">Who It's For</h2>
-          <ul class="mt-5 flex flex-wrap gap-2">
-            {
-              exp.whoItsFor.map((item) => (
-                <li class="rounded-full border border-gold/30 px-3 py-1.5 text-sm font-medium text-gold-soft">
-                  {item}
-                </li>
-              ))
-            }
-          </ul>
-
-          <h2 class="mt-10 font-display text-2xl text-paper">What's Included</h2>
-          <ul class="mt-5 space-y-3">
-            {
-              exp.whatsIncluded.map((item) => (
-                <li class="flex items-start gap-3 text-smoke">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  {item}
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
 
     <section class="bg-ink-soft py-20 sm:py-28">
       <div class="mx-auto max-w-3xl px-6 lg:px-10">
-        <h2 class="mb-8 text-center font-display text-3xl text-paper">Good to Know</h2>
-        <FAQ items={faqItems} />
+        <h2 class="mb-10 text-center font-display text-3xl text-paper">
+          How to Book {exp.name}
+        </h2>
+        <ol class="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          {bookingSteps.map((s, i) => (
+            <li class="text-center">
+              <div class={`mx-auto flex h-10 w-10 items-center justify-center rounded-full border font-display text-lg ${accentBadge}`}>
+                {i + 1}
+              </div>
+              <h3 class="mt-4 font-display text-lg text-paper">{s.title}</h3>
+              <p class="mt-2 text-sm text-smoke">{s.body}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
 

@@ -23,6 +23,12 @@ const statusClass: Record<EventStatus, string> = {
       <h2 class="mt-3 font-display text-balance text-4xl text-paper sm:text-5xl">
         {events.length > 0 ? "Reserve your seat at the table" : "No public events scheduled right now"}
       </h2>
+      {events.length === 0 && (
+        <p class="mt-4 text-smoke">
+          Public events are announced here as soon as they're scheduled — in the meantime, every
+          experience is available to book privately, any time.
+        </p>
+      )}
     </div>
 
     {
@@ -30,10 +36,10 @@ const statusClass: Record<EventStatus, string> = {
         <div class="mx-auto flex max-w-md flex-col items-center gap-5 rounded-3xl border border-line bg-surface px-8 py-12 text-center">
           <p class="text-smoke">
             We don't have a public event on the calendar at the moment. Check back soon, or
-            reach out below to plan a private experience for your own group.
+            plan a private experience for your own group below.
           </p>
           <a
-            href="#contact"
+            href="/private-bookings#request"
             class="inline-flex items-center justify-center rounded-full border border-gold/60 px-6 py-2.5 text-sm font-semibold text-gold transition-colors hover:bg-gold hover:text-ink"
           >
             Book a Private Experience
