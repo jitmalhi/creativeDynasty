@@ -1,0 +1,184 @@
+---
+// VERIFIED (AUDIT.md §4) — hero copy, "How Can We Help?" cards, and final
+// CTA copy verbatim from the live /contact page. The live page's own
+// contact form has no email field at all (a real defect noted in AUDIT.md
+// §2.7) — fixed here by adding one, since a contact form with no way to
+// reply isn't a content question, it's a functional requirement.
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import Button from "../components/ui/Button.astro";
+import ContactInfoPanel from "../components/ui/ContactInfoPanel.astro";
+
+const helpCards = [
+  {
+    emoji: "📩",
+    title: "General Inquiries",
+    body: "Have a question about an event or experience? Reach out and we'll get back to you.",
+  },
+  {
+    emoji: "🎨",
+    title: "Private Bookings",
+    body: "Looking to host your own experience? Submit a request and we'll help you plan it.",
+    href: "/private-bookings",
+  },
+  {
+    emoji: "🤝",
+    title: "Partnerships",
+    body: "Interested in collaborating or being featured? Let's connect.",
+  },
+];
+---
+
+<Layout
+  title="Contact — Creative Dynasty Events"
+  description="Whether you're booking an event, planning something special, or have a question, we're here to help."
+>
+  <Header />
+  <main>
+    <PageHero
+      eyebrow="Let's Connect"
+      title="Let's Connect"
+      subtitle="Whether you're booking an event, planning something special, or have a question, we're here to help."
+    />
+
+    <section class="bg-ink py-20 sm:py-28">
+      <div class="mx-auto max-w-6xl px-6 lg:px-10">
+        <div class="mb-14 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {
+            helpCards.map((c) =>
+              c.href ? (
+                <a
+                  href={c.href}
+                  class="block rounded-3xl border border-line bg-surface p-6 transition-colors hover:border-gold/50"
+                >
+                  <span class="text-2xl" aria-hidden="true">{c.emoji}</span>
+                  <h3 class="mt-2 font-display text-lg text-paper">{c.title}</h3>
+                  <p class="mt-2 text-sm text-smoke">{c.body}</p>
+                </a>
+              ) : (
+                <div class="rounded-3xl border border-line bg-surface p-6">
+                  <span class="text-2xl" aria-hidden="true">{c.emoji}</span>
+                  <h3 class="mt-2 font-display text-lg text-paper">{c.title}</h3>
+                  <p class="mt-2 text-sm text-smoke">{c.body}</p>
+                </div>
+              )
+            )
+          }
+        </div>
+
+        <div class="grid grid-cols-1 overflow-hidden rounded-3xl border border-line lg:grid-cols-2">
+          <div class="bg-surface p-8 sm:p-12">
+            <h2 class="font-display text-balance text-2xl text-paper sm:text-3xl">
+              Send Us a Message
+            </h2>
+            <p class="mt-2 text-sm text-smoke">We typically reply within 24–48 hours.</p>
+
+            <form id="contact-form" class="mt-8 flex flex-col gap-5" novalidate>
+              <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div>
+                  <label for="name" class="mb-1.5 block text-sm font-medium text-smoke">Name</label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    class="w-full rounded-xl border border-line bg-ink px-4 py-3 text-paper placeholder:text-smoke-dim focus:border-gold focus:outline-none"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="mb-1.5 block text-sm font-medium text-smoke">Email</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    class="w-full rounded-xl border border-line bg-ink px-4 py-3 text-paper placeholder:text-smoke-dim focus:border-gold focus:outline-none"
+                    placeholder="you@email.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="inquiryType" class="mb-1.5 block text-sm font-medium text-smoke">Inquiry type</label>
+                <select
+                  id="inquiryType"
+                  name="inquiryType"
+                  class="w-full rounded-xl border border-line bg-ink px-4 py-3 text-paper focus:border-gold focus:outline-none"
+                >
+                  <option>General Inquiry</option>
+                  <option>Partnership</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="message" class="mb-1.5 block text-sm font-medium text-smoke">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  required
+                  class="w-full rounded-xl border border-line bg-ink px-4 py-3 text-paper placeholder:text-smoke-dim focus:border-gold focus:outline-none"
+                  placeholder="How can we help?"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="mt-2 inline-flex items-center justify-center rounded-full bg-gold px-8 py-3.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.01]"
+              >
+                Submit
+              </button>
+
+              <p id="form-status" class="text-sm text-smoke" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <ContactInfoPanel
+            heading="Stay Connected"
+            body="Ready to experience it? Browse an upcoming event or book a private experience for your own group."
+          />
+        </div>
+
+        <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button href="/events" variant="ghost">🎟️ Browse Events</Button>
+          <Button href="/private-bookings" variant="secondary">📩 Book a Private Experience</Button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const status = document.getElementById("form-status");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!status) return;
+
+    status.textContent = "Sending…";
+
+    try {
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      status.textContent = "Thank you — we'll be in touch shortly.";
+      form.reset();
+    } catch {
+      status.textContent = "Something went wrong. Please email us directly instead.";
+    }
+  });
+</script>

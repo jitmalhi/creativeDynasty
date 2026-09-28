@@ -1,0 +1,38 @@
+---
+// CONTACT INFO — see src/components/Contact.astro removal note / HANDOFF.md
+// Owner requirements #1–#2 for the full classification of each item below.
+const contactEmail = "creativedynastevents3@gmail.com"; // OWNER CONFIRMATION REQUIRED (spelling)
+const instagramHref = "https://www.instagram.com/creative_dynasty_events"; // OWNER CONFIRMATION REQUIRED
+// No phone or address is shown: none exist on the live site (AUDIT.md).
+// No Facebook or TikTok is shown: no verified URL exists for either.
+
+interface Props {
+  heading: string;
+  body: string;
+}
+
+const { heading, body } = Astro.props;
+---
+
+<div class="relative flex flex-col justify-between bg-gradient-to-br from-wine to-ink p-8 sm:p-12">
+  <div>
+    <h3 class="font-display text-2xl text-paper">{heading}</h3>
+    <p class="mt-3 max-w-sm text-paper/80">{body}</p>
+  </div>
+
+  <div class="mt-10 space-y-4">
+    <a href={`mailto:${contactEmail}`} class="block text-paper/90 hover:text-gold-soft">
+      {contactEmail}
+    </a>
+
+    <div class="flex items-center gap-1.5 pt-2">
+      <a
+        href={instagramHref}
+        class="text-sm font-medium text-paper/70 underline decoration-gold/40 underline-offset-4 hover:text-gold-soft"
+      >
+        Instagram
+      </a>
+      <span class="text-xs text-smoke-dim">(pending confirmation)</span>
+    </div>
+  </div>
+</div>

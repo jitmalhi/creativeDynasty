@@ -1,6 +1,6 @@
 # Creative Dynasty Events — Project Handoff
 
-Last updated: 2026-09-28 (reconciliation pass complete)
+Last updated: 2026-09-28 (Checkpoint 2 — design system, IA, and pages built)
 This file is the source of truth for project status across sessions. Read
 it before doing any further work on this repo.
 
@@ -9,7 +9,7 @@ it before doing any further work on this repo.
 
 ---
 
-## Current status: Checkpoint 1 (audit) complete. Reconciliation pass complete — see "Reconciliation Complete" below. Ready to proceed to Checkpoint 2 verification, still gated on real owner-confirmation blockers for final content.
+## Current status: Checkpoint 2 (design system + information architecture) complete. See "Checkpoint 2 Complete" below.
 
 ### What actually happened, in order
 
@@ -152,6 +152,146 @@ Safe to build on top of without further cleanup.
 
 ---
 
+## Checkpoint 2 Complete (2026-09-28) — Design system, information architecture, pages
+
+Moved from the single-page reconciled build into a real multi-page site
+with a documented design system. No new fabricated content — every page
+uses only what `AUDIT.md` verified, or an honest interim/owner-required
+state. Ecoverdevaleting.co.uk was used only as a quality/structure
+benchmark (see "Design inspiration references" below) — nothing was
+copied from it.
+
+### Design system decisions
+
+Formalized, not reinvented — the existing dark/gold palette from the
+single-page build already fit the "premium, art-gallery, not generic
+SaaS" brief, so Checkpoint 2 productized it into reusable primitives
+rather than starting over.
+
+- **Typography:** `Fraunces` (display serif, headings/quotes) + `Inter`
+  (sans, body/UI), both loaded once in `Layout.astro`. Scale: `text-4xl
+  sm:text-5xl` for section headings, `text-lg` for lead paragraphs,
+  `text-sm` for UI labels/eyebrows (`text-xs uppercase tracking-[0.2em]
+  text-gold`).
+- **Color tokens** (`src/styles/global.css` `@theme` block, unchanged from
+  the reconciliation pass): `ink`/`ink-soft` (near-black backgrounds),
+  `surface`/`surface-soft` (card backgrounds), `line` (borders), `paper`
+  (primary text on dark), `smoke`/`smoke-dim` (secondary text), `gold`/
+  `gold-soft` (primary accent), `wine`/`wine-soft` (secondary accent, used
+  sparingly for gradients).
+- **Spacing rhythm:** sections use `py-20 sm:py-28` (secondary pages) or
+  `py-24 sm:py-32` (homepage sections); containers are `max-w-7xl` (wide
+  grids), `max-w-5xl`/`max-w-6xl` (medium), `max-w-3xl`/`max-w-2xl`
+  (text-focused), all with `px-6 lg:px-10` side padding.
+- **Radius/shadow:** cards use `rounded-3xl` with a `border border-line`
+  and no box-shadow — depth comes from the border + background contrast,
+  not shadows, per the "premium doesn't mean busy" instruction. Buttons
+  and pills use `rounded-full`. No blur/glow decoration was added in this
+  pass (the old bento grid's glow blobs were removed along with it).
+- **Buttons:** 3 variants in `src/components/ui/Button.astro` — `primary`
+  (solid gold), `secondary` (outline, paper text), `ghost` (outline, gold
+  text). One component, used everywhere, instead of ad hoc button markup
+  per page.
+- **Forms:** consistent `rounded-xl border border-line bg-ink` inputs
+  across both the general contact form and the private-booking form, with
+  visible `<label>` elements (not placeholder-only) and a live-region
+  status message on submit.
+- **Motion:** none added beyond what already existed (hover color/scale
+  transitions, a CSS-only FAQ accordion via native `<details>`). No
+  parallax, no scroll-triggered animation, no JS-driven interaction beyond
+  the mobile menu toggle and gallery filter — deliberately, per the
+  "premium doesn't mean busy" instruction.
+- **Focus states:** default browser focus rings are intact (nothing in
+  `global.css` suppresses `outline`); the FAQ accordion additionally gets
+  an explicit gold `focus-visible` ring since `<summary>` styling varies
+  across browsers.
+- **Responsive breakpoints:** Tailwind defaults (`sm`/`lg`) used
+  throughout; every grid collapses to a single column below `sm`, the
+  header collapses to a hamburger menu below `md`.
+
+### Page architecture (routes)
+
+Matches the IA recommended in `AUDIT.md` §5 — the real verified 9-page
+structure, consolidated where the audit found duplication, with no
+invented pages:
+
+| Route | Page |
+| --- | --- |
+| `/` | Home |
+| `/about` | About (story, "More Than a Paint Event," founder, mission, values, community, CTA) |
+| `/experiences/after-dark`, `/experiences/little-creators`, `/experiences/the-collective` | The 3 real experience detail pages, one dynamic route (`src/pages/experiences/[slug].astro`) driven by `src/data/experiences.ts` |
+| `/events` | Events (honest empty state today, category explanations, Events-page testimonials) |
+| `/private-bookings` | Private booking info + the detailed booking form (absorbs the old duplicate `/private-booking-page`, per `AUDIT.md` §6) |
+| `/contact` | General inquiries only — split from private bookings per this checkpoint's explicit instruction |
+
+No `/experiences` index page was built — the real live site has no such
+hub either; the three pages are reachable via Home's "Signature
+Experiences" section, Private Bookings' "Choose Your Experience" section,
+and a header dropdown.
+
+### Component architecture
+
+New reusable primitives in `src/components/ui/`: `Button`, `SectionHeading`,
+`PageHero` (secondary-page hero, lighter than the homepage `Hero`),
+`ExperienceCard`, `Testimonial` + `TestimonialsGrid`, `Founder` (full,
+used on About), `FAQ` (zero-JS, native `<details>`), `ContactInfoPanel`
+(shared email/Instagram panel used on both `/contact` and
+`/private-bookings`). Home-only sections live in `src/components/home/`
+(`WhyChooseUs`, `SignatureExperiences`, `RootedInCommunity`,
+`FounderTeaser`, `FinalCTA`) since they're single-use and page-specific.
+
+Removed: the old single-page `Experience.astro` (bento grid with
+improvised headlines that didn't match the real site's actual Home
+structure) and the old combined `Contact.astro` (replaced by the
+`/contact` + `/private-bookings` split). Neither is referenced anywhere
+— confirmed by grep before deletion.
+
+New data files: `src/data/experiences.ts` (structured, verified copy for
+all 3 experiences, shared by Home, Private Bookings, and the detail
+pages), `src/data/testimonials.ts` (all 6 verified quotes with correct
+attribution level), `src/data/founder.ts` (verified name/quote/bio, photo
+slot explicitly `null`).
+
+### Testimonials implementation
+
+All 6 verified quotes are now live: the 3 attributed ones (Erica, Leah,
+Christine) on Home, matching their real placement; the 3 unattributed
+ones on `/events`, also matching their real placement. No quote appears
+on both pages, and no name/company/title was invented for the
+unattributed ones — `Testimonial.astro` simply omits the attribution line
+when `name` is `null`.
+
+### Founder visibility
+
+Per this checkpoint's explicit instruction, the founder is now more
+visible than on the live site: a condensed teaser (quote + monogram +
+"Read Her Story" link) on Home, plus the full section (bio, quote, larger
+photo slot) on `/about`. **No photograph of Natassha Johnson was
+generated or substituted** — both the teaser and the full section render
+a gold monogram ("NJ") in a dashed-border frame when `founder.photo` is
+`null`, with an accessible label stating the photo is pending owner
+approval. Dropping in a real photo later is a one-line change
+(`src/data/founder.ts`) — no layout changes needed.
+
+### New issues discovered / decisions made this pass
+
+- The live Events page's "Limited spots available. Early Bookings
+  Recommended." banner directly contradicts its own "No events at the
+  moment" message (flagged in `AUDIT.md` §2). Deliberately **not**
+  reproduced on `/events` here.
+- The live Events page also has a mailing-list signup ("Subscribe to get
+  exclusive updates"). **Deferred, not built** — it requires choosing an
+  email-list provider, which wasn't part of this checkpoint's scope and
+  would need an owner decision. Logged in Outstanding below.
+- `/contact`'s form gained an Email field (the live site's real form has
+  none — a confirmed defect in `AUDIT.md` §2.7). Not new content, a
+  functional fix.
+- Both `/contact` and `/private-bookings` submit to the same
+  `functions/api/contact.js` endpoint — it already accepts arbitrary
+  fields, so no backend change was needed to support two form shapes.
+
+---
+
 ## Governing rules for this project (do not deviate without the user's say-so)
 
 - Audit before implementing (Checkpoint 1 — done, see `AUDIT.md`).
@@ -190,48 +330,58 @@ Safe to build on top of without further cleanup.
   whatever the owner confirms per `AUDIT.md` §8 Q1) before this is
   trustworthy.
 - **Content model:** plain `.ts` data files under `src/data/` (`events.ts`,
-  `gallery.ts`) — simple arrays, no content collections yet. Fine for this
-  site's size; revisit only if it grows meaningfully.
+  `gallery.ts`, `experiences.ts`, `testimonials.ts`, `founder.ts`) —
+  simple arrays/objects, no content collections. Still fine for this
+  site's size.
 
 ## Routes (current)
 
-- `/` — single page (`src/pages/index.astro`), all sections as components
-  under `src/components/`.
-
-No internal multi-page routing has been built yet (Checkpoint 5). The real
-site has 9 pages (see `AUDIT.md` §1) — the rebuild's IA (§5 of the audit)
-proposes consolidating `/private-booking-page` into `/private-bookings`
-and keeping the rest, including 3 real experience detail pages, which do
-not exist yet in this codebase.
+Real multi-page site — see "Page architecture" under Checkpoint 2 Complete
+above for the full route table (`/`, `/about`, `/events`,
+`/private-bookings`, `/contact`, and the 3 `/experiences/*` detail pages).
+8 pages build cleanly today.
 
 ## Components (current)
 
-`Header`, `Hero`, `CredibilityStrip`, `Experience` (bento grid), `Gallery`
-(filterable), `Events`, `Contact`, `Footer` — all under `src/components/`.
-See "What actually happened" above for which of these contain content that
-needs correcting.
+- `src/components/` — `Header` (multi-page nav + Experiences dropdown),
+  `Hero`, `CredibilityStrip`, `Gallery` (filterable), `Events`, `Footer`.
+- `src/components/ui/` — shared primitives: `Button`, `SectionHeading`,
+  `PageHero`, `ExperienceCard`, `Testimonial`, `TestimonialsGrid`,
+  `Founder`, `FAQ`, `ContactInfoPanel`.
+- `src/components/home/` — Home-only sections: `WhyChooseUs`,
+  `SignatureExperiences`, `RootedInCommunity`, `FounderTeaser`, `FinalCTA`.
 
 ## SEO status
 
-Not started for the new site. Current build has no per-page titles beyond
-the single homepage `<title>`, no sitemap, no robots.txt, no structured
-data. This mirrors gaps found in the audit of the live Wix site — needs to
-be done properly here, not copied.
+Basic hygiene in place: every page sets its own `<title>` and meta
+description via `Layout.astro` props (no more single shared homepage
+title). Still not done: sitemap, robots.txt, canonical URLs, OG images,
+structured data. Deferred to the dedicated SEO checkpoint (was Checkpoint
+7 in the original numbering) rather than done piecemeal here.
 
 ## Accessibility status
 
-Not audited yet for the new build. The live Wix site's biggest known issue
-(filename-as-alt-text on every image) must specifically be avoided when
-real photography is added here.
+Not formally audited/tested yet — no compliance claimed. What's already
+true by construction: every page has exactly one `<h1>` (verified across
+all 8 pages), every form input has a visible `<label for>`, decorative
+images use `alt=""` while placeholder content images carry honest
+"awaiting approval" alt text (never a fabricated description), the FAQ
+accordion is native `<details>`/`<summary>` (keyboard accessible with no
+JS), and default browser focus outlines are intact (nothing in
+`global.css` suppresses them). Not yet done: a real reduced-motion check,
+color-contrast verification, and touch-target sizing review on actual
+devices — this session has no screenshot/browser tool, so mobile visual
+QA still needs a real browser or device.
 
 ## Cloudflare configuration
 
 - Pages project connected via GitHub integration to
   `https://github.com/jitmalhi/creativeDynasty` (branch `main`), auto-
   deploys on push.
-- Temporary preview URL: **`https://creativedynasty.pages.dev`** — review
-  only, contains pre-audit placeholder content (see above), not ready for
-  owner review yet.
+- Temporary preview URL: **`https://creativedynasty.pages.dev`** — now
+  reflects the reconciled, multi-page Checkpoint 2 build once this commit
+  deploys. Still not "final" — see Owner requirements below for what's
+  still pending before it's ready for a full owner sign-off.
 - `RESEND_API_KEY` secret: not yet set (owner/developer action, via
   `npx wrangler pages secret put RESEND_API_KEY`).
 - No custom domain attached. No DNS changes made anywhere.
@@ -257,32 +407,32 @@ as an owner question (`AUDIT.md` §8 Q8).
 
 ## Outstanding / not yet built
 
-- Multi-page routing for the real 9-page IA.
-- Split the combined Contact/private-booking section into the two real
-  pages (`/contact`, `/private-bookings`) per their actual distinct
-  purposes — discovered during the reconciliation pass, see
-  "Reconciliation Complete" above.
-- Add a testimonials section using the 6 verified quotes (`AUDIT.md` §4)
-  — not fabrication, just not built yet.
-- Per-page SEO (titles, descriptions, OG images, canonical URLs, sitemap,
-  robots.txt, structured data where justified by verified info).
-- Accessibility pass (alt text plan for real photography, focus states,
-  reduced-motion, form error handling).
+- Sitemap, robots.txt, canonical URLs, OG images, structured data (SEO checkpoint).
+- Full accessibility pass: contrast verification, reduced-motion,
+  real-device touch targets, screen-reader pass.
+- Mailing-list signup on `/events` (real site has one) — deferred, needs
+  an owner decision on which provider to use.
 - Build-time failure on unresolved `[CONTENT REQUIRED...]` markers.
 - DNS migration checklist (before any domain connection).
 - Mobile visual QA with an actual browser/device (this session had no
-  screenshot/browser tool available).
-- Resolve the two duplicate private-booking forms per `AUDIT.md` §5.
+  screenshot/browser tool available) — layout was built mobile-first with
+  Tailwind responsive classes throughout, but not yet visually confirmed
+  on a real viewport.
+- The real photography/founder-photo/social-URL/contact-info blockers
+  from Owner requirements below — nothing code-side left to do until
+  those answers arrive.
 
 ## Next recommended step
 
-Content is now reconciled and safe to show the owner on the temporary
-preview. Next: either (a) wait for owner answers on the real blockers
-(contact info, social URLs, founder photo, photography approval) before
-any visual design-system work, since that's what Checkpoint 3 depends on,
-or (b) if the user wants to keep moving, begin Checkpoint 5 (multi-page
-routing per `AUDIT.md` §5) and the testimonials section — both use only
-already-verified content and don't depend on the outstanding blockers.
+The temporary preview now reflects a real, multi-page, on-brand site with
+zero fabricated content. Two sensible paths from here: (a) send the
+preview URL to the owner for a first look now that it's substantively
+complete, gathering the outstanding owner-confirmation answers in
+parallel, or (b) proceed straight into the SEO/accessibility/mobile QA
+checkpoint, since that work doesn't depend on any outstanding answer
+either. Actual approved photography, a founder photo, and confirmed
+contact/social details are the only things that still require the owner
+directly.
 
 ---
 
@@ -323,8 +473,20 @@ that doesn't require the answer to keep building (#5, #6, #9).
 Documents every meaningful image slot in the planned site so the layout
 can be built now and real photography (or, where explicitly appropriate,
 AI-generated supporting imagery) can be dropped in later without
-restructuring anything. **No images are being sourced or generated at
-this stage** — this is planning only.
+restructuring anything. **No real images are being sourced or generated
+at this stage** — the table below is planning; the implementation status
+column reflects Checkpoint 2's actual code.
+
+**Update (Checkpoint 2):** every slot below now exists in real code, not
+just as a plan. Swapping in an approved photo means changing one string
+(a `src`/`image` field in `src/data/experiences.ts`,
+`src/data/gallery.ts`, or `src/data/founder.ts`) — no component or layout
+changes required. Two slots not anticipated in the original plan were
+added this pass: a founder-teaser photo/monogram on Home (same source as
+the About founder photo — `src/data/founder.ts`), and one dedicated
+placeholder image per experience (`public/images/experiences/*.svg`,
+referenced from `src/data/experiences.ts`) used on the experience cards
+and detail-page heroes.
 
 Ground rule carried over from the project brief: AI-generated imagery may
 only be used where it's clearly generic/abstract and could never be

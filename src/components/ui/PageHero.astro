@@ -1,0 +1,22 @@
+---
+// Secondary-page hero — shorter and quieter than the homepage Hero, used on
+// every internal page for a consistent, premium arrival moment without
+// repeating the big video/photo treatment on every route.
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+}
+
+const { eyebrow, title, subtitle } = Astro.props;
+---
+
+<section class="border-b border-line bg-ink-soft pb-16 pt-36 sm:pb-20 sm:pt-44">
+  <div class="mx-auto max-w-3xl px-6 text-center lg:px-10">
+    {eyebrow && (
+      <p class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gold">{eyebrow}</p>
+    )}
+    <h1 class="font-display text-balance text-4xl text-paper sm:text-5xl">{title}</h1>
+    {subtitle && <p class="mx-auto mt-5 max-w-xl text-balance text-lg text-smoke">{subtitle}</p>}
+  </div>
+</section>

@@ -1,0 +1,37 @@
+---
+import { founder } from "../../data/founder";
+import Button from "../ui/Button.astro";
+
+const initials = founder.name
+  .split(" ")
+  .map((p) => p[0])
+  .join("");
+---
+
+<section class="bg-ink-soft py-20 sm:py-28">
+  <div class="mx-auto flex max-w-4xl flex-col items-center gap-8 px-6 text-center lg:px-10">
+    {
+      founder.photo ? (
+        <img src={founder.photo} alt={founder.name} class="h-24 w-24 rounded-full object-cover" />
+      ) : (
+        // FOUNDER PHOTO — OWNER APPROVAL REQUIRED, see src/data/founder.ts
+        <div
+          class="flex h-24 w-24 items-center justify-center rounded-full border border-dashed border-gold/40 bg-surface"
+          role="img"
+          aria-label={`${founder.name} — photo pending owner approval`}
+        >
+          <span class="font-display text-2xl text-gold-soft">{initials}</span>
+        </div>
+      )
+    }
+
+    <blockquote class="font-display text-balance text-2xl text-paper sm:text-3xl">
+      "{founder.quote}"
+    </blockquote>
+    <p class="text-sm font-medium text-gold">
+      {founder.name} <span class="text-smoke-dim">— {founder.role}</span>
+    </p>
+
+    <Button href="/about" variant="secondary">Read Her Story</Button>
+  </div>
+</section>

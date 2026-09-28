@@ -1,0 +1,22 @@
+---
+import type { Testimonial } from "../../data/testimonials";
+import SectionHeading from "./SectionHeading.astro";
+import TestimonialCard from "./Testimonial.astro";
+
+interface Props {
+  items: Testimonial[];
+  eyebrow?: string;
+  heading?: string;
+}
+
+const { items, eyebrow = "What People Say", heading = "Real Guests, Real Moments" } = Astro.props;
+---
+
+<section class="bg-ink py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl px-6 lg:px-10">
+    <SectionHeading eyebrow={eyebrow} heading={heading} />
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {items.map((t) => <TestimonialCard testimonial={t} />)}
+    </div>
+  </div>
+</section>

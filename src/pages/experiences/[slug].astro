@@ -1,0 +1,119 @@
+---
+// VERIFIED (AUDIT.md §4) — all overview/what-to-expect/who-it's-for/
+// what's-included copy comes from src/data/experiences.ts, itself sourced
+// verbatim from each experience's live detail page. No pricing, capacity,
+// or guarantees are shown — none were confirmed by the audit.
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import Button from "../../components/ui/Button.astro";
+import FAQ from "../../components/ui/FAQ.astro";
+import { experiences } from "../../data/experiences";
+
+export function getStaticPaths() {
+  return experiences.map((exp) => ({
+    params: { slug: exp.slug },
+    props: { exp },
+  }));
+}
+
+const { exp } = Astro.props;
+
+const faqItems = [
+  { question: "Who is this experience for?", answer: exp.whoItsFor.join(" · ") },
+  { question: "What should I expect?", answer: exp.whatToExpect.join(" · ") },
+  { question: "What's included?", answer: exp.whatsIncluded.join(" · ") },
+];
+---
+
+<Layout title={`${exp.name} — Creative Dynasty Events`} description={exp.tagline}>
+  <Header />
+  <main>
+    <section class="relative overflow-hidden border-b border-line bg-ink-soft pb-16 pt-36 sm:pb-20 sm:pt-44">
+      <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 lg:grid-cols-2 lg:px-10">
+        <div class="text-center lg:text-left">
+          <p class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+            {exp.emoji} Signature Experience
+          </p>
+          <h1 class="font-display text-balance text-4xl text-paper sm:text-5xl">{exp.name}</h1>
+          <p class="mt-4 text-balance text-lg text-gold-soft">{exp.tagline}</p>
+          <p class="mt-5 max-w-lg text-smoke lg:mx-0">{exp.overview}</p>
+          <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
+            <Button href="/private-bookings#request" variant="primary">{exp.cta}</Button>
+            <Button href="/events" variant="secondary">View Upcoming Dates</Button>
+          </div>
+        </div>
+
+        <div class="mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border border-line">
+          <img src={exp.image} alt="" class="h-full w-full object-cover" />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-ink py-20 sm:py-28">
+      <div class="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-6 sm:grid-cols-2 lg:px-10">
+        <div>
+          <h2 class="font-display text-2xl text-paper">What to Expect</h2>
+          <ul class="mt-5 space-y-3">
+            {
+              exp.whatToExpect.map((item) => (
+                <li class="flex items-start gap-3 text-smoke">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-display text-2xl text-paper">Who It's For</h2>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {
+              exp.whoItsFor.map((item) => (
+                <li class="rounded-full border border-gold/30 px-3 py-1.5 text-sm font-medium text-gold-soft">
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+
+          <h2 class="mt-10 font-display text-2xl text-paper">What's Included</h2>
+          <ul class="mt-5 space-y-3">
+            {
+              exp.whatsIncluded.map((item) => (
+                <li class="flex items-start gap-3 text-smoke">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-ink-soft py-20 sm:py-28">
+      <div class="mx-auto max-w-3xl px-6 lg:px-10">
+        <h2 class="mb-8 text-center font-display text-3xl text-paper">Good to Know</h2>
+        <FAQ items={faqItems} />
+      </div>
+    </section>
+
+    <section class="bg-ink py-16">
+      <div class="mx-auto max-w-2xl px-6 text-center lg:px-10">
+        <h2 class="font-display text-balance text-3xl text-paper sm:text-4xl">
+          Ready for {exp.name}?
+        </h2>
+        <div class="mt-8">
+          <Button href="/private-bookings#request" variant="primary">{exp.cta}</Button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

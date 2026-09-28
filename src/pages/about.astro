@@ -1,0 +1,151 @@
+---
+// All copy in this page is VERIFIED verbatim from the live site's /about
+// page (AUDIT.md §4) unless noted otherwise.
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import Founder from "../components/ui/Founder.astro";
+import Button from "../components/ui/Button.astro";
+
+const morePillars = [
+  {
+    emoji: "🎨",
+    title: "Creativity",
+    body: "A guided experience designed for all skill levels, making it easy to participate and enjoy.",
+  },
+  {
+    emoji: "🍽️",
+    title: "Food",
+    body: "Every event includes a flavorful meal, creating a more social and immersive experience.",
+  },
+  {
+    emoji: "🤝",
+    title: "Connection",
+    body: "Our events are designed to bring people together, creating opportunities to meet, connect, and engage.",
+  },
+];
+
+const values = [
+  { title: "Community", body: "Supporting and collaborating with local businesses and people." },
+  { title: "Creativity", body: "Encouraging self-expression in a fun and accessible way." },
+  { title: "Connection", body: "Creating environments where people feel welcome and engaged." },
+  { title: "Experience", body: "Delivering more than expected through thoughtful details." },
+];
+---
+
+<Layout
+  title="About — Creative Dynasty Events"
+  description="Creating experiences that bring people together through creativity, food, and community."
+>
+  <Header />
+  <main>
+    <PageHero
+      eyebrow="About Creative Dynasty"
+      title="About Creative Dynasty"
+      subtitle="Creating experiences that bring people together through creativity, food, and community."
+    />
+
+    <section class="bg-ink py-20 sm:py-28">
+      <div class="mx-auto max-w-3xl px-6 lg:px-10">
+        <SectionHeading eyebrow="Our Story" heading="How It Started" align="left" />
+        <div class="space-y-5 text-smoke">
+          <p>
+            Creative Dynasty Events was built on the belief that creativity has the power to
+            bring people together. What started as a passion for art has grown into a platform
+            that creates meaningful experiences where people can connect, express themselves,
+            and enjoy something different.
+          </p>
+          <p>
+            Each event is intentionally designed to feel welcoming, engaging, and memorable,
+            bringing together creativity, conversation, and shared moments around food.
+          </p>
+          <p class="font-medium text-paper">
+            Creative Dynasty was nominated for the <span class="text-gold">2026 Visual Arts
+            Award</span> from The Lotus Hope Foundation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-ink-soft py-20 sm:py-28">
+      <div class="mx-auto max-w-5xl px-6 lg:px-10">
+        <SectionHeading eyebrow="Not Just Painting" heading="More Than a Paint Event" />
+        <p class="mx-auto -mt-8 mb-12 max-w-2xl text-center text-smoke">
+          Creative Dynasty is not just about painting, it's about the full experience. From the
+          atmosphere to the music to the meal included in every event, each detail is
+          thoughtfully curated to create something that feels elevated, social, and complete.
+        </p>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {
+            morePillars.map((p) => (
+              <div class="rounded-3xl border border-line bg-surface p-8 text-center">
+                <span class="text-3xl" aria-hidden="true">{p.emoji}</span>
+                <h3 class="mt-3 font-display text-xl text-paper">{p.title}</h3>
+                <p class="mt-2 text-sm text-smoke">{p.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-ink py-20 sm:py-28">
+      <div class="mx-auto max-w-4xl px-6 lg:px-10">
+        <Founder />
+      </div>
+    </section>
+
+    <section class="bg-ink-soft py-20 sm:py-28">
+      <div class="mx-auto max-w-3xl px-6 text-center lg:px-10">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Our Mission</p>
+        <p class="mt-5 font-display text-balance text-2xl text-paper sm:text-3xl">
+          To create experiences that connect people, inspire creativity, and build stronger
+          communities through shared moments and meaningful interaction.
+        </p>
+      </div>
+    </section>
+
+    <section class="bg-ink py-20 sm:py-28">
+      <div class="mx-auto max-w-5xl px-6 lg:px-10">
+        <SectionHeading eyebrow="Our Values" heading="What We Stand For" />
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            values.map((v) => (
+              <div class="rounded-3xl border border-line bg-surface p-6">
+                <h3 class="font-display text-lg text-paper">{v.title}</h3>
+                <p class="mt-2 text-sm text-smoke">{v.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-ink-soft py-20 sm:py-28">
+      <div class="mx-auto max-w-3xl px-6 text-center lg:px-10">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Rooted in Community</p>
+        <p class="mt-5 text-lg text-smoke">
+          Creative Dynasty proudly supports local businesses by incorporating their products
+          into events, creating opportunities for visibility, collaboration, and shared success
+          within the community.
+        </p>
+      </div>
+    </section>
+
+    <section class="bg-ink py-20 sm:py-28">
+      <div class="mx-auto max-w-2xl px-6 text-center lg:px-10">
+        <h2 class="font-display text-balance text-4xl text-paper sm:text-5xl">Join the Experience</h2>
+        <p class="mx-auto mt-4 max-w-md text-smoke">
+          Whether you're attending an event or booking your own, we invite you to experience
+          something different.
+        </p>
+        <div class="mt-8">
+          <Button href="/events" variant="primary">Browse Events</Button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

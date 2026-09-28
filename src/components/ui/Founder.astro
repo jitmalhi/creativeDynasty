@@ -1,0 +1,41 @@
+---
+import { founder } from "../../data/founder";
+
+const initials = founder.name
+  .split(" ")
+  .map((p) => p[0])
+  .join("");
+---
+
+<div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-[280px_1fr]">
+  <div class="mx-auto lg:mx-0">
+    {
+      founder.photo ? (
+        <img
+          src={founder.photo}
+          alt={founder.name}
+          class="aspect-square w-56 rounded-3xl object-cover lg:w-full"
+        />
+      ) : (
+        // FOUNDER PHOTO — OWNER APPROVAL REQUIRED (see src/data/founder.ts).
+        // Monogram placeholder, not a stand-in photo, so nothing here could
+        // be mistaken for Natassha Johnson.
+        <div
+          class="flex aspect-square w-56 items-center justify-center rounded-3xl border border-dashed border-gold/40 bg-surface lg:w-full"
+          role="img"
+          aria-label={`${founder.name} — photo pending owner approval`}
+        >
+          <span class="font-display text-5xl text-gold-soft">{initials}</span>
+        </div>
+      )
+    }
+  </div>
+
+  <div>
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Meet the Founder</p>
+    <h3 class="mt-2 font-display text-3xl text-paper">{founder.name}</h3>
+    <p class="mt-1 text-sm text-smoke-dim">{founder.role}</p>
+    <blockquote class="mt-5 font-display text-xl text-gold-soft">"{founder.quote}"</blockquote>
+    <p class="mt-5 max-w-xl text-smoke">{founder.bio}</p>
+  </div>
+</div>

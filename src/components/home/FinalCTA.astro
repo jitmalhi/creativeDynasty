@@ -1,0 +1,17 @@
+---
+// VERIFIED (AUDIT.md §4) — heading and both button labels verbatim from the
+// live Home page's final CTA section.
+import Button from "../ui/Button.astro";
+---
+
+<section class="bg-ink-soft py-20 sm:py-28">
+  <div class="mx-auto max-w-2xl px-6 text-center lg:px-10">
+    <h2 class="font-display text-balance text-4xl text-paper sm:text-5xl">
+      Ready to Experience It for Yourself?
+    </h2>
+    <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <Button href="/events" variant="primary">Book Your Spot</Button>
+      <Button href="/contact" variant="secondary">Partner With Us</Button>
+    </div>
+  </div>
+</section>

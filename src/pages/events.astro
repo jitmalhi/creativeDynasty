@@ -1,0 +1,72 @@
+---
+// VERIFIED (AUDIT.md §4) — hero copy and category descriptions verbatim
+// from the live /events page. The live page also shows a "Limited spots
+// available" banner directly above its own "No events at the moment"
+// message — a contradiction flagged in AUDIT.md §2 — deliberately not
+// reproduced here.
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import PageHero from "../components/ui/PageHero.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import TestimonialsGrid from "../components/ui/TestimonialsGrid.astro";
+import Events from "../components/Events.astro";
+import { testimonials } from "../data/testimonials";
+
+const categories = [
+  {
+    title: "Social Experiences",
+    body: "Designed for connection, fun, and a vibrant atmosphere. Perfect for friends, date nights, and solo attendees looking to enjoy a creative and engaging environment.",
+  },
+  {
+    title: "Networking & Community",
+    body: "Experiences created to bring people together through conversation, collaboration, and creativity while supporting and highlighting local businesses.",
+  },
+  {
+    title: "Family-Friendly",
+    body: "Creative experiences designed for children and parents to connect, explore, and enjoy meaningful moments together in a fun and welcoming space.",
+  },
+];
+
+// The Events page's own unattributed quotes (AUDIT.md §4).
+const eventsTestimonials = testimonials.filter((t) => !t.name);
+---
+
+<Layout
+  title="Events — Creative Dynasty Events"
+  description="Find the event that aligns with your energy, intention, and moment."
+>
+  <Header />
+  <main>
+    <PageHero
+      eyebrow="Explore Experiences"
+      title="Explore Experiences"
+      subtitle="Find the event that aligns with your energy, intention, and moment."
+    />
+
+    <Events />
+
+    <section class="bg-ink-soft py-20 sm:py-28">
+      <div class="mx-auto max-w-6xl px-6 lg:px-10">
+        <SectionHeading eyebrow="Categories" heading="Find the Experience That Fits You" />
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {
+            categories.map((c) => (
+              <div class="rounded-3xl border border-line bg-surface p-8">
+                <h3 class="font-display text-xl text-paper">{c.title}</h3>
+                <p class="mt-3 text-sm text-smoke">{c.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <TestimonialsGrid
+      items={eventsTestimonials}
+      eyebrow="What People Are Saying"
+      heading="From Past Events"
+    />
+  </main>
+  <Footer />
+</Layout>

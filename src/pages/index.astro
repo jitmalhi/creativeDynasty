@@ -3,11 +3,19 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import CredibilityStrip from "../components/CredibilityStrip.astro";
-import Experience from "../components/Experience.astro";
+import WhyChooseUs from "../components/home/WhyChooseUs.astro";
+import SignatureExperiences from "../components/home/SignatureExperiences.astro";
 import Gallery from "../components/Gallery.astro";
-import Events from "../components/Events.astro";
-import Contact from "../components/Contact.astro";
+import RootedInCommunity from "../components/home/RootedInCommunity.astro";
+import FounderTeaser from "../components/home/FounderTeaser.astro";
+import TestimonialsGrid from "../components/ui/TestimonialsGrid.astro";
+import FinalCTA from "../components/home/FinalCTA.astro";
 import Footer from "../components/Footer.astro";
+import { testimonials } from "../data/testimonials";
+
+// Home shows the 3 attributed testimonials (matches the live Home page's
+// placement — AUDIT.md §4). The other 3 unattributed quotes live on /events.
+const homeTestimonials = testimonials.filter((t) => t.name);
 ---
 
 <Layout>
@@ -15,10 +23,13 @@ import Footer from "../components/Footer.astro";
   <main>
     <Hero />
     <CredibilityStrip />
-    <Experience />
+    <WhyChooseUs />
+    <SignatureExperiences />
     <Gallery />
-    <Events />
-    <Contact />
+    <RootedInCommunity />
+    <FounderTeaser />
+    <TestimonialsGrid items={homeTestimonials} />
+    <FinalCTA />
   </main>
   <Footer />
 </Layout>
