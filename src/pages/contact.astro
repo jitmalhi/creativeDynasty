@@ -76,6 +76,12 @@ const helpCards = [
             <p class="mt-2 text-sm text-smoke">We typically reply within 24–48 hours.</p>
 
             <form id="contact-form" class="mt-8 flex flex-col gap-5" novalidate>
+              <!-- Honeypot — hidden from real visitors, most simple bots fill it anyway. -->
+              <div class="absolute h-0 w-0 overflow-hidden" aria-hidden="true">
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+              </div>
+
               <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label for="name" class="mb-1.5 block text-sm font-medium text-smoke">Name</label>

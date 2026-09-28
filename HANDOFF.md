@@ -1,6 +1,6 @@
 # Creative Dynasty Events — Project Handoff
 
-Last updated: 2026-09-28 (Checkpoint 2 — design system, IA, and pages built)
+Last updated: 2026-09-28 (Checkpoint 3 — technical QA complete)
 This file is the source of truth for project status across sessions. Read
 it before doing any further work on this repo.
 
@@ -9,7 +9,7 @@ it before doing any further work on this repo.
 
 ---
 
-## Current status: Checkpoint 2 (design system + information architecture) complete. See "Checkpoint 2 Complete" below.
+## Current status: Checkpoint 3 (technical QA) complete. See "Checkpoint 3 — Technical QA" and "Premium Visual QA" below. The technical foundation is solid; what's left is real photography, the founder photo, and confirmed contact/social details — not more architecture.
 
 ### What actually happened, in order
 
@@ -292,6 +292,348 @@ approval. Dropping in a real photo later is a one-line change
 
 ---
 
+## Checkpoint 3 — Technical QA (2026-09-28)
+
+A technical QA pass across all 9 pages (the 8 content pages plus a new
+404), done without a visual browser/screenshot tool (none is available in
+this session) — so this is a rigorous code-level and computed audit
+(responsive class review, WCAG contrast math, live HTTP testing against a
+local Cloudflare emulator), not a pixel-verified visual pass. That
+limitation is called out explicitly wherever it applies below, per the
+instruction not to claim compliance without having actually tested it.
+Ecoverdevaleting.co.uk was used only as a quality/polish benchmark during
+this pass — nothing from it was copied.
+
+### 1–2. Mobile & desktop QA
+
+**Method:** reviewed every page's Tailwind responsive classes for the
+classic failure modes (fixed pixel widths, unguarded `min-w`, negative
+margins, `whitespace-nowrap`/`truncate` that can force overflow, elements
+without a responsive column-collapse). A repo-wide grep for `w-[`,
+`min-w-`, risky negative margins, and `whitespace-nowrap`/`truncate`
+returned **zero matches** — no known overflow-causing patterns exist
+anywhere in the codebase.
+
+**Found and fixed (technical):**
+- Header brand text (`Creative Dynasty Events` in the display serif) sat
+  directly next to the hamburger button with no mobile size reduction —
+  tight enough on ≤360px screens to risk cramping or wrapping. Now
+  `text-base sm:text-lg`.
+- The mobile menu hamburger button was a `p-2` icon button (~36×36px,
+  under the 44×44px minimum touch target). Now explicitly `h-11 w-11`
+  (44×44px).
+- The hero's scroll-down bounce animation had no `prefers-reduced-motion`
+  guard. Now `motion-reduce:animate-none`.
+
+**Reviewed, no issue found:** every grid collapses to a single column
+below `sm` (`grid-cols-1 sm:grid-cols-2/3`); the header collapses to a
+hamburger below `md` with the desktop Experiences dropdown never
+rendering on mobile (it's nested inside the `hidden md:flex` desktop nav,
+confirmed by reading the markup); the Events date column's fixed `w-40`
+is ~160px, safe even at a 320px viewport; the masonry gallery uses native
+CSS multi-column (`columns-1 sm:columns-2 lg:columns-3`), which reflows
+safely.
+
+**Not verified (needs a real browser/device):** actual visual crop of the
+placeholder images at each breakpoint, real touch-target feel, and
+whether the spacing "feels" intentional rather than just avoiding bugs —
+these are judgment calls a static code read can't fully make. Flagged
+under Premium Visual QA below where relevant, and as a follow-up in
+Outstanding.
+
+**Desktop:** container widths are consistent by content type
+(`max-w-7xl` for wide grids, `max-w-5xl`/`max-w-6xl` for medium,
+`max-w-3xl`/`max-w-2xl` for text-focused sections) and section padding
+follows one rhythm (`py-20 sm:py-28` secondary pages, `py-24 sm:py-32`
+homepage) — no inconsistent one-off spacing found. See Premium Visual QA
+for a judgment call on whether this rhythm becomes *repetitive* across
+pages, which is a design question, not a bug.
+
+### 3. Accessibility QA
+
+**Verified by construction / re-checked this pass:**
+- Exactly one `<h1>` per page, confirmed by grepping all 9 built pages
+  (not just assumed from the source).
+- Every form input has a visible `<label for>` (no placeholder-only
+  labeling).
+- Decorative images use `alt=""`; every placeholder content image carries
+  honest "awaiting approval" alt text — never a fabricated description.
+- The FAQ accordion uses native `<details>/<summary>` — keyboard and
+  screen-reader accessible with zero custom JS.
+- Default browser focus outlines are intact (`global.css` never sets
+  `outline: none`); the FAQ trigger additionally gets an explicit gold
+  `focus-visible` ring.
+- **Color contrast — computed, not estimated.** Ran the actual WCAG
+  relative-luminance formula against every text/background color pair
+  used in the design system. Every pairing passes AA for normal text
+  (≥4.5:1); most exceed AAA (7:1):
+
+  | Pairing | Ratio | AA normal text |
+  | --- | --- | --- |
+  | paper on ink (body text) | 17.57:1 | Pass |
+  | smoke on ink (secondary text) | 9.31:1 | Pass |
+  | smoke-dim on ink (most muted text used) | 5.21:1 | Pass |
+  | gold on ink (eyebrows/links) | 8.18:1 | Pass |
+  | ink on gold (primary button text) | 8.18:1 | Pass |
+  | paper on wine (info panel heading) | 9.20:1 | Pass |
+  | paper/80 opacity on wine, correctly alpha-blended | 6.50:1 | Pass |
+  | gold-soft on wine (blockquote accent) | 6.10:1 | Pass |
+
+  No color pairing in the current design system fails AA. This is a real
+  finding, not a guess — the script is disposable but the math is exact.
+
+**Found and fixed (technical):** none beyond what's listed under
+Mobile/Desktop above (the touch-target and reduced-motion fixes are
+accessibility fixes as much as mobile ones).
+
+**Implemented but not manually tested (flagged, not claimed):** the
+header's Experiences dropdown is built to open on both `:hover` and
+`:focus-within`, so tabbing to the "Experiences" link should reveal the
+panel and let a keyboard user continue tabbing into its links — this is
+the correct pattern in principle, but hasn't been confirmed with a real
+keyboard/screen-reader pass. Recommend a manual test before launch.
+
+**Not yet done, no compliance claimed:** a real screen-reader pass, a
+full keyboard-only walkthrough of every form and interactive element, and
+device-based touch-target confirmation. This project does not claim WCAG
+compliance — only what's listed above as actually checked.
+
+### 4–5. SEO & structured data
+
+**Found and fixed (technical, both real bugs):**
+- `astro.config.mjs` had `site: 'https://creativedynastyevents.com'` —
+  meaning every canonical URL, OG URL, and sitemap entry was already
+  claiming the real production domain as canonical, despite that domain
+  still running the live Wix site with entirely different content. This
+  is exactly the risk this checkpoint asked to guard against, just in the
+  opposite direction from what was expected. Fixed: `site` now points at
+  the actual temporary preview (`https://creativedynasty.pages.dev`),
+  with a comment explaining not to change it until domain migration is
+  approved.
+- Added `<meta name="robots" content="noindex, nofollow">` sitewide and a
+  `public/robots.txt` that disallows all crawling. This is the strongest
+  possible guard against the temporary domain being indexed or mistaken
+  for the real site — it can't become a canonical anything if it's never
+  indexed. Both should be reversed only when the owner approves going
+  live on the real domain.
+
+**Added (technical):**
+- `@astrojs/sitemap` integration — `sitemap-index.xml`/`sitemap-0.xml`
+  now generate automatically at build time from real routes (verified:
+  all 8 content pages present, the new 404 page correctly excluded).
+- Per-page canonical `<link>` tags (verified present and correct on every
+  page checked).
+- `og:url` and `og:site_name` added; `og:image` deliberately **not**
+  added — no approved social-share image exists yet, and fabricating one
+  isn't appropriate. Documented in the Creative Asset Plan.
+- A simple monogram favicon (gold "CD" on ink) replacing Astro's default
+  rocket icon — explicitly a placeholder, not a claim to be the business's
+  real approved logo mark (that requires the same photography-approval
+  process as everything else — see Owner requirements).
+- Minimal `Organization` JSON-LD (name, url, description only).
+  Deliberately **excludes** address, telephone, `sameAs` (social),
+  `aggregateRating`, and `priceRange` — none are confirmed. Used
+  `Organization` rather than `LocalBusiness` specifically because
+  `LocalBusiness` schema implies a physical address, which isn't
+  verified.
+- Every page already had its own unique `<title>`/description via
+  `Layout.astro` props since Checkpoint 2 — reconfirmed here, not
+  re-done.
+
+**Still outstanding:** sitemap/robots.txt need to be swapped for
+production-ready versions when the domain migrates (documented inline in
+both files as a reminder).
+
+### 6. Links
+
+Re-ran a full `href="/..."` sweep across the entire built output. Every
+internal link resolves to a route that actually exists — full list:
+`/`, `/about`, `/contact`, `/events`, `/experiences/after-dark`,
+`/experiences/little-creators`, `/experiences/the-collective`,
+`/private-bookings`, plus the in-page anchors `/#experiences` and
+`/private-bookings#request`, both of which target real `id` attributes
+(confirmed in the markup). **No dead internal links found.**
+
+Facebook remains removed (no verified URL exists — confirmed still true,
+not re-added). Instagram remains visibly marked "(pending confirmation)"
+on both `/contact` and `/private-bookings` — confirmed still accurate,
+not silently upgraded to "verified."
+
+### 7. Forms
+
+Tested both forms end-to-end against a local Cloudflare Pages Functions
+emulator (`wrangler pages dev`) — no real email was sent (`RESEND_API_KEY`
+isn't set, so delivery is safely stubbed regardless; per instruction, no
+test message was sent to any personal address):
+
+| Test | Result |
+| --- | --- |
+| Valid general-contact payload | `200 {"ok":true,"delivered":false}` |
+| Valid private-booking payload | `200 {"ok":true,"delivered":false}` |
+| Honeypot filled (simulated bot) | `200 {"ok":true,"delivered":false}` — silently accepted, no email attempted |
+| Missing required fields | `400 {"error":"Name and email are required"}` |
+| Invalid email format | `400 {"error":"Invalid email address"}` |
+
+**Found and fixed (technical):**
+- Neither form had any spam deterrent. Added an accessible honeypot field
+  (visually and semantically hidden via `aria-hidden` + zero-size
+  `overflow-hidden`, **not** the common off-screen-positioning trick,
+  which can itself cause horizontal-overflow bugs on some browsers — the
+  exact class of bug this checkpoint asked to hunt for) to both forms,
+  checked server-side in `functions/api/contact.js`.
+- The shared `contact.js` function used to assume one fixed set of fields
+  (`eventType`/`date`). Rewritten to build the forwarded email body
+  generically from whatever fields are present, so it correctly handles
+  both the general-contact shape and the private-booking shape (including
+  the new `inquiryType`/`guests` fields) without needing to know which
+  page sent it.
+- A real, previously-undiscovered bug unrelated to forms: **any
+  nonexistent URL returned HTTP 200 with the homepage's content** instead
+  of a 404 — Cloudflare Pages' default fallback behavior with no
+  `404.html` present. Added `src/pages/404.astro`; re-tested against the
+  local emulator and confirmed a nonexistent URL now correctly returns
+  `404` with a proper not-found page.
+
+**Validation/errors:** both forms rely on native HTML5 constraint
+validation (`required`, `type="email"`) plus a live-region
+(`aria-live="polite"`) status message for the async submit result. This
+is a reasonable accessible baseline — browsers announce native validation
+messages to screen readers — but there's no custom per-field inline error
+styling. Logged as a creative/UX enhancement, not a blocker.
+
+**Email delivery architecture:** unchanged from Checkpoint 2 — Resend,
+`onboarding@resend.dev` sender (deliberately not the real domain, since
+verifying a sending domain requires DNS changes that are off-limits
+pre-approval), graceful `delivered:false` degradation until the API key
+is set. **Not tested:** actual email arrival, since no key is configured
+— documented as a limitation, not silently assumed to work.
+
+### 8. Performance
+
+- **Images:** all current images are placeholder SVGs, a few KB each —
+  no real-photography weight to optimize yet (that's Checkpoint 4's
+  problem, and the Creative Asset Plan below specifies dimensions so
+  future images can be sized correctly from the start rather than
+  optimized after the fact).
+- **Lazy loading:** gallery and experience-card images use
+  `loading="lazy"`; the homepage hero and each page's `PageHero`/detail
+  hero correctly do *not* lazy-load (they're above the fold — lazy-loading
+  an LCP image would hurt, not help, performance).
+- **JavaScript:** no framework runtime ships to the client anywhere —
+  Astro's static output plus a handful of small vanilla scripts (mobile
+  menu toggle, gallery filter, two form submit handlers). No new JS
+  dependency was added this pass.
+- **CSS:** single Tailwind v4 JIT-generated bundle, ~31KB unminified
+  before gzip, scoped to only the utility classes actually used across
+  the whole site — confirmed by checking the build output, not assumed.
+- **Fonts:** Google Fonts link already used `&display=swap` (prevents
+  invisible-text-during-load); left unchanged, already correct.
+- **Dependencies added this pass:** only `@astrojs/sitemap` (a first-party
+  Astro integration, build-time only, adds zero client-side JS). No
+  performance library was added "because one exists" — the honeypot,
+  404 page, and structured data are all plain HTML/JS with no new
+  dependency.
+
+---
+
+## Premium Visual QA
+
+Honest critique against the Ecoverde quality benchmark — for polish,
+depth, and conversion strategy, not layout/branding to copy. Split
+strictly into **Technical issue** (a bug, something objectively broken)
+vs. **Creative improvement** (a legitimate design judgment call, to be
+addressed in the visual/asset pass, not now).
+
+**Technical issues found this pass:** all already listed and fixed above
+under Checkpoint 3 (site-config canonical bug, missing 404, missing
+noindex/sitemap/robots, missing honeypot, two mobile touch-target/motion
+issues). Nothing outstanding in this category from this pass.
+
+**Creative improvements identified (deferred to the visual/asset stage,
+not fixed now):**
+
+- **Photo-forward storytelling is currently the weakest part of the
+  site, structurally by design.** The hero, every experience card, the
+  founder section, and the entire gallery are placeholder-only. This
+  isn't a bug — it's the direct, correct consequence of not fabricating
+  or reusing unapproved photography. But it's also exactly where Ecoverde
+  earns most of its "premium" feeling (real before/after work, a real
+  founder photo). Closing this gap is squarely the next stage's job, and
+  the highest-priority creative item on the list below.
+- **Section rhythm is visually repetitive across pages.** Home's "Why
+  Choose Us" → "Signature Experiences," About's pillar/values blocks, and
+  Private Bookings' "Perfect For"/"What's Included" all use the same
+  centered-heading-plus-3-or-4-column-grid pattern. Individually clean,
+  but a visitor browsing several pages in one sitting could start to feel
+  the site is one template repeated. Worth varying composition (e.g., an
+  asymmetric or left-aligned section per page) once real imagery gives
+  something worth breaking the grid for.
+- **Trust signals under-index versus the benchmark, correctly.** Ecoverde
+  leans on aggregated review counts and multiple credibility layers.
+  Creative Dynasty Events currently has none of that verified (no review
+  platform found in the audit), so none was fabricated — the trust
+  section here is quieter than the benchmark. This will close naturally
+  once/if the owner confirms a real review platform; it should not be
+  papered over with an invented number in the meantime.
+- **FAQ presence is narrow.** Currently lives only on the three
+  experience detail pages. Ecoverde's FAQ pattern is more central to its
+  conversion strategy. Home and Private Bookings could each carry a short,
+  page-relevant FAQ block once there's more verified content to draw from
+  (e.g., real event logistics once any exist).
+- **Testimonial cards are functional but plain** — a bordered quote block
+  with no visual distinction beyond the gold name. A tasteful quote-mark
+  treatment or grouping with a founder/photo element (once approved
+  imagery exists) would lift this without adding complexity.
+
+**What's already working, stated plainly (not everything needs fixing):**
+the dark ink/gold palette with a serif display face reads as a distinct,
+intentional point of view rather than a generic template; spacing and
+container widths are consistent throughout, not ad hoc; the CTA hierarchy
+(solid gold primary vs. outline secondary) is clear and used consistently
+sitewide; the founder is now genuinely more visible than on the live
+site, exactly as instructed, even without a photo yet.
+
+---
+
+## Checkpoint 3 — classified findings summary
+
+Every finding from this checkpoint, sorted into exactly one of three
+buckets, as requested.
+
+### Must fix before launch (technical — none outstanding; all found this pass were fixed)
+
+All 8 technical bugs found during this QA pass were fixed in the same
+pass, not just logged: the `astro.config.mjs` canonical-domain bug, missing
+sitewide `noindex`/`robots.txt`, missing sitemap, missing per-page
+canonical tags, missing 404 handling (a real, previously-undiscovered
+bug), missing form spam protection, the undersized mobile menu touch
+target, and the missing `prefers-reduced-motion` guard. Nothing in this
+category remains open from this pass. Still open from earlier checkpoints
+(unrelated to this QA pass): build-time failure on unresolved
+`[CONTENT REQUIRED...]` markers is still not implemented.
+
+### Creative enhancement (deferred to the visual/asset pass, not blockers)
+
+- Real photography for the hero, 3 experience images, founder photo, and
+  gallery (see updated Creative Asset Plan above — this is the big one).
+- Section-layout variety to reduce visual repetition across pages.
+- Wider FAQ presence (Home, Private Bookings) once more verified content
+  exists to draw from.
+- More visually distinctive testimonial card treatment.
+- Custom per-field inline form validation styling (native browser
+  validation already works and is accessible; this would be polish).
+- A real `og:image` once a hero/founder photo exists to source it from.
+
+### Owner confirmation (unchanged blockers — nothing in this QA pass could resolve these)
+
+Contact email spelling, phone/address, the real Facebook URL, Instagram
+currency, founder photo approval, and photography approval generally —
+identical to the list carried since Checkpoint 1. This QA pass was
+purely technical/structural and didn't touch content, so this list is
+unchanged, not newly discovered.
+
+---
+
 ## Governing rules for this project (do not deviate without the user's say-so)
 
 - Audit before implementing (Checkpoint 1 — done, see `AUDIT.md`).
@@ -407,32 +749,36 @@ as an owner question (`AUDIT.md` §8 Q8).
 
 ## Outstanding / not yet built
 
-- Sitemap, robots.txt, canonical URLs, OG images, structured data (SEO checkpoint).
-- Full accessibility pass: contrast verification, reduced-motion,
-  real-device touch targets, screen-reader pass.
+- Sitemap ✅, robots.txt ✅, canonical URLs ✅, structured data ✅ (all done
+  Checkpoint 3) — **OG image** still outstanding, deferred until a
+  hero/founder photo exists to source it from.
+- Contrast ✅ (computed, documented above) and reduced-motion ✅ done
+  Checkpoint 3. Still outstanding: a real screen-reader pass and
+  device-based touch-target confirmation.
 - Mailing-list signup on `/events` (real site has one) — deferred, needs
   an owner decision on which provider to use.
 - Build-time failure on unresolved `[CONTENT REQUIRED...]` markers.
 - DNS migration checklist (before any domain connection).
-- Mobile visual QA with an actual browser/device (this session had no
-  screenshot/browser tool available) — layout was built mobile-first with
-  Tailwind responsive classes throughout, but not yet visually confirmed
-  on a real viewport.
+- True visual mobile QA with an actual browser/device (this session still
+  has no screenshot/browser tool) — Checkpoint 3 did a thorough code-level
+  responsive/overflow audit instead (see above) and fixed everything it
+  could find that way, but a real-device pass would still be worth doing
+  before owner sign-off.
 - The real photography/founder-photo/social-URL/contact-info blockers
   from Owner requirements below — nothing code-side left to do until
   those answers arrive.
 
 ## Next recommended step
 
-The temporary preview now reflects a real, multi-page, on-brand site with
-zero fabricated content. Two sensible paths from here: (a) send the
-preview URL to the owner for a first look now that it's substantively
-complete, gathering the outstanding owner-confirmation answers in
-parallel, or (b) proceed straight into the SEO/accessibility/mobile QA
-checkpoint, since that work doesn't depend on any outstanding answer
-either. Actual approved photography, a founder photo, and confirmed
-contact/social details are the only things that still require the owner
-directly.
+The technical foundation is now solid — see "Checkpoint 3 — classified
+findings summary" above: no unresolved technical must-fix items remain
+from this pass. The next stage should be the **premium creative asset and
+visual refinement pass** (real photography, founder photo, the
+section-variety and trust-signal creative improvements logged in Premium
+Visual QA), not another architecture rebuild. That stage is gated on the
+owner providing or approving photography and the founder photo; the
+contact/social confirmations can arrive in parallel and get wired in
+independently (each is a one-line data change, not a rebuild).
 
 ---
 
@@ -515,6 +861,97 @@ Note: the one existing asset filenamed `ChatGPT Image Apr 11, 2026,
 be considered for a slot marked "AI-generated appropriate," never for a
 "real preferred/required" slot — pending owner decision per Owner
 requirements #10.
+
+### Checkpoint 3 update — priority tiers, pixel guidance, and composition
+
+Every current placeholder is a plain gradient with no real focal point, so
+"focal point" and "mobile crop" below are forward guidance for the actual
+photography shoot/selection, not something derivable from the current
+placeholders. **Priority 1** items should be sourced/approved first — they
+carry the most visual weight and appear highest in the visitor journey.
+
+**Priority 1 — Home hero** (`public/images/hero-placeholder.svg` →
+`src/components/Hero.astro`)
+- Recommended type: real photography (or a short muted video loop per the
+  code comment already in `Hero.astro`)
+- Orientation/aspect: landscape, full-bleed — design for ~16:9 to 21:9 on
+  desktop, must survive a hard crop to ~4:5 on mobile
+- Approximate dimensions: 2400×1350px minimum (desktop retina), so the
+  mobile 4:5 crop still has resolution to spare
+- Composition/focal point: subject(s) placed center-to-upper-frame — the
+  lower third gets covered by the headline/CTA gradient overlay on both
+  breakpoints, so keep faces/action out of the bottom ~35% of the frame
+- Mobile crop: center-weighted crop works safest given the overlay
+  gradient already darkens the bottom edge
+- Mood: warm, ambient, low-key lighting (matches the existing gold/wine
+  palette) — energetic but not garish
+- Real vs AI: **real required**, no exceptions — this is the single
+  highest-trust image on the site
+- Priority: **1 (highest)**
+
+**Priority 1 — Experience cards & detail-page heroes** (3 images,
+`public/images/experiences/*.svg` → `src/data/experiences.ts`)
+- Recommended type: real photography, one per experience (After Dark,
+  Little Creators, The Collective) — must be visually distinguishable
+  from each other at a glance
+- Orientation/aspect: portrait 4:5 (card use) — the same image is reused
+  at the top of each detail page, so avoid a composition that only works
+  cropped square
+- Approximate dimensions: 1200×1500px minimum
+- Composition/focal point: subject in the upper two-thirds; cards overlay
+  no text on the image itself (name/tagline sit below in a text block), so
+  focal point can be more centered than the hero
+- Mobile crop: cards go full-width single-column below `sm`, so the full
+  4:5 frame is visible on mobile — no separate mobile crop needed
+- Mood: After Dark — moody/low-light/energetic; Little Creators —
+  bright/warm/family-friendly; The Collective — collaborative/social,
+  mid-tone lighting. Three distinct moods matching each experience's own
+  verified tagline
+- Real vs AI: **real required** — these represent three distinct real
+  paid offerings
+- Priority: **1**
+
+**Priority 2 — Founder photo** (`src/data/founder.ts`, used on Home
+teaser + full About section)
+- Recommended type: real photography of Natassha Johnson only — **never**
+  AI-generated or stock
+- Orientation/aspect: works as both 1:1 (Home teaser, circular crop) and
+  4:5 (About, rounded-square crop) — a well-composed 4:5 original can be
+  center-cropped to 1:1 without reshooting
+- Approximate dimensions: 1200×1500px minimum
+- Composition/focal point: face/shoulders in upper-to-center frame so both
+  the square and portrait crops keep the face fully visible
+- Mood: warm, approachable, confident — matches the verified quote's tone
+- Real vs AI: **real required, no exceptions**
+- Priority: **2** — second only to the hero for trust impact, per this
+  checkpoint's explicit founder-visibility instruction
+
+**Priority 2 — Gallery/portfolio grid** (6 slots today,
+`src/data/gallery.ts`)
+- Recommended type: real photography only — this section's entire purpose
+  is proving real past events happened
+- Orientation/aspect: mixed portrait/landscape (masonry layout already
+  handles mixed ratios natively — no need to force one aspect ratio)
+- Approximate dimensions: 1000px on the short edge minimum
+- Composition: variety is the point — wide room shots, close-up canvas
+  work, candid guest moments, spread across the 4 verified categories
+  (Signature/Social/Family/Private)
+- Mood: candid, real, unpolished-but-professional (matches Ecoverde's
+  "real work photos, not stock" benchmark pattern)
+- Real vs AI: **real required, no exceptions**
+- Priority: **2**
+
+**Priority 3 — supporting/secondary slots** (About "Rooted in Community,"
+Private Bookings hero support, Contact background texture): unchanged
+from the original plan above — real preferred where people/events are
+depicted, generic AI-generated texture acceptable only for abstract,
+non-figurative backgrounds. Lower priority since they're supporting
+rather than primary trust moments.
+
+**Not planned as a new slot:** `og:image` (social-share preview) —
+deliberately deferred until a hero or founder photo is approved, since
+reusing one of those is the natural source rather than commissioning a
+separate asset.
 
 ---
 

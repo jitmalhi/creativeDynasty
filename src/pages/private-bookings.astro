@@ -144,6 +144,12 @@ const steps = [
         <div class="grid grid-cols-1 overflow-hidden rounded-3xl border border-line lg:grid-cols-2">
           <div class="bg-surface p-8 sm:p-12">
             <form id="booking-form" class="flex flex-col gap-5" novalidate>
+              <!-- Honeypot — hidden from real visitors, most simple bots fill it anyway. -->
+              <div class="absolute h-0 w-0 overflow-hidden" aria-hidden="true">
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+              </div>
+
               <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label for="name" class="mb-1.5 block text-sm font-medium text-smoke">Name</label>

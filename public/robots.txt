@@ -1,0 +1,9 @@
+# This is a temporary Cloudflare Pages preview of an in-progress rebuild —
+# not the production Creative Dynasty Events site. Disallowed everywhere
+# so it can't be indexed or mistaken for the real, approved site while
+# content is still pending owner sign-off. See HANDOFF.md.
+#
+# When the production domain is connected, replace this file with one
+# that allows crawling and points at the real sitemap.
+User-agent: *
+Disallow: /

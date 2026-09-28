@@ -1,11 +1,14 @@
 /**
  * Cloudflare Pages Function — POST /api/contact
  *
- * Receives the booking inquiry form from src/components/Contact.astro and
- * forwards it by email via Resend (https://resend.com). Cloudflare Pages
- * Functions run independently of the Astro build (Astro's static output
- * goes to /dist, this file deploys automatically from /functions), so no
- * Astro server adapter is needed.
+ * Shared endpoint for both the general contact form (src/pages/contact.astro)
+ * and the private-booking form (src/pages/private-bookings.astro) — the two
+ * forms send slightly different field sets, so this handler builds the
+ * email body generically from whatever fields are present rather than
+ * assuming one shape. Forwards by email via Resend (https://resend.com).
+ * Cloudflare Pages Functions run independently of the Astro build (Astro's
+ * static output goes to /dist, this file deploys automatically from
+ * /functions), so no Astro server adapter is needed.
  *
  * Required config (see README.md "Wiring the contact form" for exact commands):
  *   - Secret:  RESEND_API_KEY        (wrangler pages secret put)
@@ -25,10 +28,27 @@
  * real domain would require adding DNS records to it, which is explicitly
  * off-limits until the owner approves domain migration (see governing
  * rules in HANDOFF.md). Switch this once a verified sending domain exists.
+ *
+ * Spam: both forms include a hidden "company" honeypot field (real users
+ * never see or fill it, most simple bots do). A non-empty honeypot returns
+ * a fake success without sending anything, so bots get no signal about
+ * what tripped it.
  */
 
 const DEFAULT_TO_EMAIL = "creativedynastevents3@gmail.com";
 const DEFAULT_FROM_EMAIL = "Creative Dynasty Website <onboarding@resend.dev>";
+
+// Fields to leave out of the forwarded email body (internal/meta, not
+// something a human reading the inquiry needs to see).
+const OMIT_FROM_BODY = new Set(["name", "email", "company"]);
+
+const FIELD_LABELS = {
+  inquiryType: "Inquiry type",
+  eventType: "Event type",
+  guests: "Number of guests",
+  date: "Preferred date",
+  message: "Message",
+};
 
 export async function onRequestPost({ request, env }) {
   let data;
@@ -38,7 +58,13 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "Invalid request body" }, 400);
   }
 
-  const { name, email, eventType, date, message } = data ?? {};
+  const { name, email, company } = data ?? {};
+
+  // Honeypot: real visitors never fill this hidden field. Pretend success
+  // without doing anything, so automated submissions get no useful signal.
+  if (company) {
+    return json({ ok: true, delivered: false });
+  }
 
   if (!name || !email) {
     return json({ error: "Name and email are required" }, 400);
@@ -56,6 +82,12 @@ export async function onRequestPost({ request, env }) {
   const toEmail = env.TO_EMAIL || DEFAULT_TO_EMAIL;
   const fromEmail = env.FROM_EMAIL || DEFAULT_FROM_EMAIL;
 
+  const bodyLines = [`Name: ${name}`, `Email: ${email}`];
+  for (const [key, value] of Object.entries(data)) {
+    if (OMIT_FROM_BODY.has(key) || !value) continue;
+    bodyLines.push(`${FIELD_LABELS[key] ?? key}: ${value}`);
+  }
+
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -66,15 +98,8 @@ export async function onRequestPost({ request, env }) {
       from: fromEmail,
       to: [toEmail],
       reply_to: email,
-      subject: `New booking inquiry — ${eventType ?? "General"}`,
-      text: [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Event type: ${eventType ?? "—"}`,
-        `Preferred date: ${date ?? "—"}`,
-        "",
-        message ?? "",
-      ].join("\n"),
+      subject: `New inquiry from ${name}`,
+      text: bodyLines.join("\n"),
     }),
   });
 
