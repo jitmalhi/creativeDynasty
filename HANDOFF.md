@@ -194,3 +194,46 @@ Reconcile `src/data/events.ts`, `src/data/gallery.ts`, and
 stops showing fabricated content — this is the fastest way to get the
 temporary URL to a state that's actually safe to show the owner. Then
 proceed to Checkpoint 5 (internal pages) using the IA in `AUDIT.md` §5.
+
+---
+
+## Design inspiration references
+
+Not project rules — just patterns worth considering when Checkpoint 3
+(design system) resumes. Logged here so they aren't lost between sessions.
+
+### ecoverdevaleting.co.uk (reviewed 2026-09-28)
+
+A UK mobile car-valeting site, offered as a reference by the user, not a
+site being cloned. Transferable patterns for Creative Dynasty Events:
+
+- **Founder-led trust, surfaced early.** They run a "Meet the Founder"
+  section with photo + personal narrative near the top of the funnel, not
+  buried. Creative Dynasty already has real founder content (Natassha
+  Johnson, verified in `AUDIT.md` §4) sitting only on `/about` — worth
+  considering a condensed version on the homepage too.
+- **Low-friction alternative contact channel.** They lead with WhatsApp
+  alongside a form. This directly addresses a real audit finding: the live
+  Creative Dynasty contact form has no email field at all
+  (`AUDIT.md` §2.7). Worth asking the owner whether Instagram DM or
+  WhatsApp is already how people actually reach them informally, as a
+  fallback/companion to fixing the form.
+- **Photo-forward, not stock-forward.** Real before/after and in-progress
+  work photos, not polished stock imagery, and it still reads as
+  professional through layout/typography. Reinforces the project's own
+  image-strategy rule — Creative Dynasty's casual real event photos
+  (`AUDIT.md` §4, "Real photography available for reuse") can work the
+  same way once given a consistent treatment.
+- **FAQ block addressing objections.** ("Can you come to my home?" etc.)
+  Creative Dynasty's three experience detail pages already contain
+  FAQ-shaped verified content ("Who it's for," "What's included") that
+  could be reformatted as an explicit FAQ section rather than plain prose.
+- **Review-count trust signals near the hero.** They aggregate review
+  counts from multiple platforms (Google, Checkatrade, Facebook) right
+  under the hero. Creative Dynasty has 6 verified testimonials but no
+  known aggregated review-platform presence — worth an owner question if
+  one exists (Google Business Profile, Facebook reviews) to borrow this
+  pattern honestly rather than inventing a count.
+
+No action taken on these — they're inputs for the design-system checkpoint,
+not commitments.
