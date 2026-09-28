@@ -1,6 +1,6 @@
 # Creative Dynasty Events — Project Handoff
 
-Last updated: 2026-09-28 (owner requirements + Creative Asset Plan added)
+Last updated: 2026-09-28 (reconciliation pass complete)
 This file is the source of truth for project status across sessions. Read
 it before doing any further work on this repo.
 
@@ -9,7 +9,7 @@ it before doing any further work on this repo.
 
 ---
 
-## Current status: Checkpoint 1 complete. Checkpoints 2–4 exist but predate the audit-first process and need reconciliation before continuing.
+## Current status: Checkpoint 1 (audit) complete. Reconciliation pass complete — see "Reconciliation Complete" below. Ready to proceed to Checkpoint 2 verification, still gated on real owner-confirmation blockers for final content.
 
 ### What actually happened, in order
 
@@ -28,44 +28,127 @@ it before doing any further work on this repo.
 3. **Checkpoint 1 (audit) has now been done properly** — see `AUDIT.md` for
    the full findings. It used direct HTTP fetches of all 9 real pages on
    `www.creativedynastyevents.com`, not summaries, so it's source-verified.
-4. **The existing build has NOT yet been reconciled against the audit.**
-   Concretely, the following in the current codebase are known to conflict
-   with verified reality and must be fixed before this can be considered a
-   real Checkpoint 2–4 pass:
-   - `src/data/events.ts` — contains 3 fabricated events with invented
-     dates. The real site currently has **zero** upcoming events ("No
-     events at the moment"). Must be replaced with an honest empty/"Details
-     Coming Soon" state, per the Event Logic rules.
-   - `src/components/Contact.astro` — placeholder email
-     (`hello@creativedynastyevents.com`), placeholder phone (`(555)
-     010-0100`), and placeholder (`#`) social links. Real verified email is
-     `creativedynastevents3@gmail.com`; no real phone or address exists to
-     publish; Instagram is `instagram.com/creative_dynasty_events`
-     (unconfirmed by owner); Facebook has no verified real URL yet.
-   - `src/data/gallery.ts` — categories (`Sip & Paint / Private Socials /
-     Galas`) don't match the real Events page filters (`ALL / SIGNATURE /
-     SOCIAL / FAMILY / PRIVATE`).
-   - `src/components/CredibilityStrip.astro` — award wording happens to
-     match the verified real text, no change needed there.
-   - `src/components/Hero.astro` and gallery images — all placeholder SVGs,
-     none are real Creative Dynasty Events photography. 9 real images were
-     identified in the audit (Wix CDN) but not yet pulled in — needs owner
-     approval on which to use (see `AUDIT.md` §8).
-   - No page currently has a unique title/meta description — same defect
-     as the live Wix site, just not yet fixed here either.
-5. **Do not treat the current deployed preview
-   (`https://creativedynasty.pages.dev`) as reviewable/final.** It still
-   contains the pre-audit fabricated content above.
+4. **The pre-audit build has now been reconciled against the audit.** See
+   "Reconciliation Complete" below for the full before/after. The temporary
+   preview (`https://creativedynasty.pages.dev`) will reflect the corrected
+   content once this commit deploys.
 
-### Recommended immediate next step
+---
 
-Reconcile the existing components/data against `AUDIT.md` (Checkpoint
-2–4 cleanup pass), THEN move to Checkpoint 5+ (internal pages, SEO,
-accessibility, mobile QA). Do not add new fabricated content in the
-process — anything still unknown after the audit stays marked
-`[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` in the code and content
-data files, and the production build should fail if any such marker
-remains at build time (not yet implemented — see Outstanding below).
+## Reconciliation Complete (2026-09-28)
+
+Full content-integrity pass against `AUDIT.md` and the Owner requirements
+table above. No design-system or visual-architecture changes were made —
+this was strictly a content correction pass within the existing layout.
+
+### What was removed (unsupported/fabricated — deleted, not hidden)
+
+- **3 invented events** from `src/data/events.ts` ("After Dark: Bold
+  Strokes," "Little Creators: Autumn Palette," "The Collective: Open
+  Studio Social"), each with a made-up date and a fake `#` registration
+  link. The live site verifiably shows zero events — the array is now
+  genuinely empty, not just visually hidden.
+- **Fake "Reserve Your Seat" registration buttons and a fabricated
+  "Connect Eventbrite" teaser line** from `src/components/Events.astro` —
+  neither corresponded to a real, working registration path.
+- **A fabricated phone number** (`(555) 010-0100`) from
+  `src/components/Contact.astro` — no phone number exists anywhere on the
+  live site.
+- **The Facebook and TikTok links** from `src/components/Contact.astro` —
+  no verified Facebook URL exists (the live site's own Facebook icon
+  points to Wix's own page, `facebook.com/wix`, not the business's), and
+  no TikTok presence was found anywhere in the audit.
+- **A row of 4 generic partner/press labels** ("Local Press," "Partner
+  Studio," "Featured In," "Community Partner") from
+  `src/components/CredibilityStrip.astro` — `AUDIT.md` found zero press
+  mentions or confirmed partners anywhere on the live site.
+- **3 fabricated gallery categories** (`Sip & Paint`, `Private Socials`,
+  `Galas`) from `src/data/gallery.ts`, replaced — not renamed — with the
+  live site's real, verified Events-page filters (`All / Signature /
+  Social / Family / Private`).
+- **Alt text describing specific fictional scenes** ("Guests connecting
+  over cocktails," "Live music at a Creative Dynasty gala") on every
+  gallery placeholder — replaced with honest "awaiting approved
+  photography" alt text.
+- **References to "Sip & Paint nights, private socials, and galas"** as
+  if they were real offering categories, in the sitewide default meta
+  description (`Layout.astro`) and the hero subheadline
+  (`Hero.astro`) — Creative Dynasty Events' real offerings are After Dark,
+  Little Creators, and The Collective; replaced with the site's actual
+  verified tagline copy.
+- **An unverified "live music" claim** in the Experience bento grid — the
+  audit only confirmed "music + high-energy atmosphere," not specifically
+  live music. Softened to "music."
+- **Placeholder sender/recipient email addresses**
+  (`hello@creativedynastyevents.com`, `bookings@creativedynastyevents.com`)
+  in `functions/api/contact.js` and `wrangler.toml` — replaced with the
+  real, verified recipient address and Resend's own default sender (see
+  "corrected" below for why).
+
+### What was corrected (kept, but fixed to match verified reality)
+
+- **Contact email** (`src/components/Contact.astro`,
+  `functions/api/contact.js`, `wrangler.toml`) now uses the real, verified
+  `creativedynastevents3@gmail.com` found via a working `mailto:` link on
+  the live site — kept visible (not blanked to a placeholder token)
+  because it's a real, functioning address, but flagged in code comments
+  as OWNER CONFIRMATION REQUIRED on spelling.
+- **Instagram link** now uses the real found handle
+  (`instagram.com/creative_dynasty_events`) but is shown with a visible
+  "(pending confirmation)" tag rather than presented as verified — per the
+  explicit instruction not to publish an unconfirmed social URL as fact.
+- **Email sender domain**: `FROM_EMAIL` now uses Resend's own
+  `onboarding@resend.dev` instead of an invented
+  `@creativedynastyevents.com` address, since sending from the real domain
+  would require adding DNS records there — off-limits until domain
+  migration is approved.
+- **Events system** (`src/data/events.ts`, `src/components/Events.astro`)
+  was rebuilt (data model + rendering, not visual style) to support
+  Coming Soon / Registration Open / Registration Closed / Event Complete
+  states, with a registration button only ever rendered when status is
+  genuinely "registration-open" and a real link is present. With zero
+  events, the section now renders an honest "No public events scheduled
+  right now" state with a legitimate CTA to the (verified, working)
+  contact/private-booking path — instead of silently showing nothing or
+  leaving fake content in place.
+- **Booking form fields** (`Contact.astro`) gained a "Number of guests"
+  field — not new content, just matching the verified real booking
+  process, which the audit confirmed includes this field on both existing
+  Wix forms.
+
+### What remains owner-confirmation-required
+
+Unchanged from the Owner requirements table above — nothing new was
+resolved by this pass, since reconciliation only works with what's already
+verified. Real blockers: contact email spelling, phone/address (still
+absent), Facebook URL (still none), Instagram handle currency, founder
+photo approval, and photography approval generally.
+
+### What's ready for implementation
+
+Everything now in the codebase is either verified-real (experiences,
+booking process, testimonials not yet re-added to markup — see below,
+mission/values content already used in `Experience.astro`/
+`CredibilityStrip.astro`) or an honest, clearly-marked interim state
+(empty events, "pending confirmation" Instagram, no phone/address shown).
+Safe to build on top of without further cleanup.
+
+### New issues discovered during this pass
+
+- The build previously had **no way to verify** at build time that no
+  `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` marker or fabricated
+  content slips into production — still not implemented (see Outstanding).
+- The single-page `Contact.astro` section conflates general contact and
+  private-booking inquiries into one form under a "Private Booking"
+  eyebrow label, while the real site treats `/contact` and
+  `/private-bookings` as two distinct pages with two different forms.
+  Not fixed in this pass (would require multi-page routing, i.e. a
+  structural/design change, explicitly out of scope for a reconciliation-
+  only pass) — flagged for Checkpoint 5.
+- The site's 6 verified testimonials (`AUDIT.md` §4) are not yet rendered
+  anywhere in the current single-page build — the pre-audit build never
+  included a testimonials section. Not a fabrication issue, just a gap;
+  worth adding once Checkpoint 5+ resumes.
 
 ---
 
@@ -174,9 +257,13 @@ as an owner question (`AUDIT.md` §8 Q8).
 
 ## Outstanding / not yet built
 
-- Reconcile existing components/data against `AUDIT.md` (see "Recommended
-  immediate next step").
 - Multi-page routing for the real 9-page IA.
+- Split the combined Contact/private-booking section into the two real
+  pages (`/contact`, `/private-bookings`) per their actual distinct
+  purposes — discovered during the reconciliation pass, see
+  "Reconciliation Complete" above.
+- Add a testimonials section using the 6 verified quotes (`AUDIT.md` §4)
+  — not fabrication, just not built yet.
 - Per-page SEO (titles, descriptions, OG images, canonical URLs, sitemap,
   robots.txt, structured data where justified by verified info).
 - Accessibility pass (alt text plan for real photography, focus states,
@@ -189,11 +276,13 @@ as an owner question (`AUDIT.md` §8 Q8).
 
 ## Next recommended step
 
-Reconcile `src/data/events.ts`, `src/data/gallery.ts`, and
-`src/components/Contact.astro` against `AUDIT.md` so the deployed preview
-stops showing fabricated content — this is the fastest way to get the
-temporary URL to a state that's actually safe to show the owner. Then
-proceed to Checkpoint 5 (internal pages) using the IA in `AUDIT.md` §5.
+Content is now reconciled and safe to show the owner on the temporary
+preview. Next: either (a) wait for owner answers on the real blockers
+(contact info, social URLs, founder photo, photography approval) before
+any visual design-system work, since that's what Checkpoint 3 depends on,
+or (b) if the user wants to keep moving, begin Checkpoint 5 (multi-page
+routing per `AUDIT.md` §5) and the testimonials section — both use only
+already-verified content and don't depend on the outstanding blockers.
 
 ---
 

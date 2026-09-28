@@ -3,10 +3,18 @@ compatibility_date = "2026-09-01"
 pages_build_output_dir = "dist"
 
 # Non-secret config read by functions/api/contact.js.
-# TODO: confirm these are the real addresses before launch.
+#
+# TO_EMAIL is the real, verified mailto: address found on the live site's
+# Contact page (AUDIT.md §4) — spelling is OWNER CONFIRMATION REQUIRED
+# (HANDOFF.md, Owner requirements #1) but this is a real working address.
+#
+# FROM_EMAIL intentionally uses Resend's own onboarding@resend.dev sender,
+# not a @creativedynastyevents.com address: sending from the real domain
+# needs DNS records added there, which is off-limits until the owner
+# approves domain migration. Update once a verified sending domain exists.
 [vars]
-TO_EMAIL = "hello@creativedynastyevents.com"
-FROM_EMAIL = "Creative Dynasty Website <bookings@creativedynastyevents.com>"
+TO_EMAIL = "creativedynastevents3@gmail.com"
+FROM_EMAIL = "Creative Dynasty Website <onboarding@resend.dev>"
 
 # Local dev with functions (build first, then serve dist/ + functions/):
 #   npm run build

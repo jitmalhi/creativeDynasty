@@ -14,10 +14,21 @@
  * If RESEND_API_KEY isn't set yet, the function still validates input and
  * returns success (with a `delivered: false` flag) so the form keeps working
  * in the UI while the email integration is being wired up.
+ *
+ * TO_EMAIL default below is the real, verified `mailto:` address found on
+ * the live site's Contact page (AUDIT.md §4) — OWNER CONFIRMATION REQUIRED
+ * on spelling (see HANDOFF.md, Owner requirements #1), but it is a real
+ * working address, not an invented one.
+ *
+ * FROM_EMAIL default deliberately uses Resend's own onboarding@resend.dev
+ * sender rather than a @creativedynastyevents.com address: sending from the
+ * real domain would require adding DNS records to it, which is explicitly
+ * off-limits until the owner approves domain migration (see governing
+ * rules in HANDOFF.md). Switch this once a verified sending domain exists.
  */
 
-const DEFAULT_TO_EMAIL = "hello@creativedynastyevents.com";
-const DEFAULT_FROM_EMAIL = "Creative Dynasty Website <bookings@creativedynastyevents.com>";
+const DEFAULT_TO_EMAIL = "creativedynastevents3@gmail.com";
+const DEFAULT_FROM_EMAIL = "Creative Dynasty Website <onboarding@resend.dev>";
 
 export async function onRequestPost({ request, env }) {
   let data;

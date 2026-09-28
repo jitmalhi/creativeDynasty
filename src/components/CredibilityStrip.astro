@@ -1,20 +1,20 @@
 ---
-// TODO: Confirm exact award wording and add real partner/press logos to /public/images/press/
-const partners = ["Local Press", "Partner Studio", "Featured In", "Community Partner"];
+// VERIFIED (AUDIT.md §4): "Creative Dynasty was nominated for the 2026 Visual
+// Arts Award from The Lotus Hope Foundation." — appears verbatim on the live
+// site's About page.
+//
+// The pre-audit build also rendered a row of generic partner/press labels
+// ("Local Press", "Partner Studio", "Featured In", "Community Partner").
+// UNSUPPORTED/FABRICATED — AUDIT.md found zero press mentions or confirmed
+// partner logos anywhere on the live site. Removed rather than renamed.
+// Restore this row only once the owner supplies real, verified press/partner
+// logos (see HANDOFF.md, Owner requirements).
 ---
 
 <section class="border-y border-line bg-ink-soft py-6">
-  <div class="mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 lg:flex-row lg:justify-between lg:px-10">
-    <p class="text-center text-sm font-medium text-paper lg:text-left">
+  <div class="mx-auto flex max-w-7xl items-center justify-center px-6 lg:px-10">
+    <p class="text-center text-sm font-medium text-paper">
       <span class="text-gold">Nominated</span> — 2026 Visual Arts Award, The Lotus Hope Foundation
     </p>
-
-    <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 opacity-60">
-      {
-        partners.map((name) => (
-          <span class="text-xs font-semibold uppercase tracking-widest text-smoke">{name}</span>
-        ))
-      }
-    </div>
   </div>
 </section>
