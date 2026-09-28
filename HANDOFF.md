@@ -9,7 +9,7 @@ it before doing any further work on this repo.
 
 ---
 
-## Current status: Checkpoint 3 (technical QA) complete. See "Checkpoint 3 — Technical QA" and "Premium Visual QA" below. The technical foundation is solid; what's left is real photography, the founder photo, and confirmed contact/social details — not more architecture.
+## Current status: Checkpoint 4 (premium creative/visual audit) complete. See "Checkpoint 4 — Premium Creative / Visual Audit" below. This was an audit-only pass — no redesign, no architecture change. The site is ready for deliberate creative production using this audit as the blueprint.
 
 ### What actually happened, in order
 
@@ -634,7 +634,482 @@ unchanged, not newly discovered.
 
 ---
 
-## Governing rules for this project (do not deviate without the user's say-so)
+## Checkpoint 4 — Premium Creative / Visual Audit (2026-09-28)
+
+Audit only, per instruction — no redesign performed. One tiny, genuinely
+objective fix was considered (making `Button.astro`'s mobile width
+consistent with `Hero.astro`'s hand-coded buttons) and **reverted** after
+checking every usage: most `Button` instances are standalone single CTAs
+where forcing full-width would look worse, not better, so this is a real
+design judgment call for the next stage, not an obvious bug. No other
+code changes were made this pass. Reviewed via a fresh, complete re-read
+of every page's source (not recycled from Checkpoint 3's notes), since
+this audit needed page-by-page specificity. No browser/screenshot tool
+was available — mobile findings are code-level (spacing, breakpoint
+math, actual character-width estimates where relevant), clearly marked
+as not device-verified.
+
+### Overall assessment
+
+The site is honest, structurally sound, and already has a distinct point
+of view (the dark ink/gold palette + serif display face doesn't read as
+a generic template). What's holding it back from "professionally
+art-directed" today is almost entirely the absence of real photography —
+not the code, not the information architecture, and not the copy. The
+second most significant issue is systemic: nearly every section on every
+page opens with the same "centered gold eyebrow + centered heading"
+gesture, and 3-column bordered card grids appear on every single page.
+Individually each instance is clean; together they're the clearest
+"template" tell on the site. Both issues have clear, specific fixes
+documented below for the next stage.
+
+### Strong existing elements (do not change)
+
+- **The About page's founder section** breaks from the card-grid pattern
+  with an asymmetric photo+text layout — the most visually distinct
+  moment on the site and appropriately so, given it's the most important
+  trust element. A model other sections could learn from.
+- **Private Bookings has the best internal rhythm of any page** — a
+  two-column list section, an experience-card grid, numbered circular
+  steps, and a form/panel split are four genuinely different layout
+  shapes on one page, not four variations of the same card grid.
+- **CTA hierarchy** (solid gold primary vs. outline secondary vs. ghost
+  outline-gold) is consistent and legible sitewide — a visitor always
+  knows which button is "the" action.
+- **The overall Home page narrative arc** (hook → why → what → proof →
+  community → who → social proof → ask) follows sound sales-journey
+  logic structurally, independent of how any one section looks today.
+- **Honesty under real constraints reads as intentional, not broken** —
+  the Events empty state, the "(pending confirmation)" Instagram tag, and
+  the founder monogram all look like deliberate design choices, not
+  missing content. This is worth preserving even after real assets
+  arrive — the pattern of graceful, non-alarming placeholder states is a
+  genuine strength.
+
+### Generic / template-like elements
+
+- **Home's "Why Choose Us" and "Rooted in Community" sections are nearly
+  identical in shape** — both are a centered eyebrow plus one paragraph
+  on a plain background, differing only in background shade and word
+  count, and they sit close enough together (with only two sections
+  between them) to read as two near-duplicate filler slides rather than
+  distinct moments.
+- **The 3-column bordered-card treatment is reused verbatim for
+  unrelated content**: About's "More Than a Paint Event" pillars, Events'
+  category descriptions, and Contact's "How Can We Help?" cards are all
+  visually identical (`rounded-3xl border-line bg-surface`, icon/emoji +
+  title + body) despite representing completely different kinds of
+  information. A screenshot of any one of these sections, cropped, could
+  belong to almost any events or creative-services business.
+- **Every section-opening heading treatment is identical, sitewide, with
+  zero exceptions** — `SectionHeading` (or its inline equivalent) always
+  centers an uppercase gold eyebrow above a centered serif heading. This
+  is the single most systemic "template" signal on the site, more so
+  than any individual section.
+- **The three experience detail pages currently are, honestly, close to
+  the generic template this checkpoint asked me to check for** (Hero →
+  text → info list → FAQ → CTA). This is the most direct, specific answer
+  to the question this checkpoint posed for section 5 — see "Experience
+  page recommendations" below.
+
+### Repetitive patterns (specific locations, not general impressions)
+
+- **Events page: two 3-column card grids appear back-to-back** —
+  "Find the Experience That Fits You" (categories) immediately followed
+  by the testimonials grid, same column count, same card border
+  treatment, no visual separator beyond a background-shade change. The
+  single most blatant instance of immediate repetition anywhere on the
+  site.
+- **About page is the most internally repetitive single page**: two
+  "centered eyebrow + one paragraph" moments (Mission, Rooted in
+  Community) plus two different card grids (pillars, values) — a visitor
+  reaching the bottom of About has seen both dominant patterns on the
+  site twice each, on one page.
+- **The experience detail pages' FAQ section doesn't add new
+  information** — it re-presents the same `whoItsFor`/`whatToExpect`/
+  `whatsIncluded` data already shown as bullet lists and pill badges
+  seconds earlier in the scroll, just reformatted as three questions with
+  the answers joined into one run-on sentence (`Array.join(" · ")`). A
+  visitor who just read the "Who It's For" pills doesn't learn anything
+  new from the FAQ asking "Who is this experience for?" right below it.
+  This is a real, specific weakness, not a generic "add more FAQ" note.
+
+### Visual storytelling opportunities
+
+- **The Gallery/Portfolio section is the most visually inert section on
+  the site** — six flat gradient placeholders where the entire point of
+  the section is proving real events happened. Highest-leverage single
+  fix once photography exists.
+- **About's "Our Story" section is pure text** (three paragraphs, zero
+  visual support) on the page most fundamentally about the brand's
+  origin and the founder's story — a natural home for a photo (founder
+  at work, an early event) once approved imagery exists.
+- **Experience detail pages have exactly one image each** (the hero) and
+  never return to imagery — no image/text alternation, no atmosphere
+  shots between the "What to Expect" and FAQ sections. Once photography
+  exists, breaking up the current two-column-text-only middle section
+  with a supporting image would do more for "premium feel" than any
+  layout trick.
+
+### Homepage recommendations (sales-journey evaluation)
+
+Walking through as a first-time visitor, against the 8 questions this
+checkpoint asked:
+
+1. **What is Creative Dynasty Events?** Answered clearly by the hero +
+   "Why Choose Us."
+2. **Who is it for?** Not immediately clear from the homepage alone — the
+   Signature Experiences cards show emoji, name, and tagline, but not
+   audience. A visitor has to click through to an experience page to
+   learn "Adults 21+" (After Dark) or "Families" (Little Creators). Can
+   improve with current verified information: each `experience.whoItsFor`
+   array already has this data — surfacing the first item as a small tag
+   on the card (not inventing anything, just resurfacing existing data)
+   would close this gap.
+3. **What experiences are available?** Answered clearly.
+4. **Why are the experiences different from each other?** Partially — the
+   one-line taglines differentiate them, but nothing on the homepage
+   communicates *why* three separate formats exist versus one flexible
+   offering. Minor; not urgent.
+5. **Can they attend a public event?** Technically yes (CTAs point to
+   `/events`), but the homepage gives zero forewarning that the events
+   page currently shows an honest empty state — a visitor clicking
+   "Browse Events" expecting a live calendar hits a "no events right now"
+   message with no setup. Not dishonest, but a real expectation-mismatch
+   worth a strategic look: with zero public events today, is "Browse
+   Events" the right *primary* hero CTA, versus leading with "Book a
+   Private Event" (a guaranteed positive outcome) and making events
+   secondary until any are scheduled? Flagged as a genuine strategic
+   question for the next stage, not fixed here.
+6. **Can they book a private event?** Answered clearly, multiple paths.
+7. **Who is behind the business?** Answered, but late in the scroll (the
+   founder teaser sits after "Rooted in Community," roughly 60–70% down
+   the page). Given this checkpoint's own founder-visibility priority,
+   consider moving the teaser earlier — e.g., directly after "Why Choose
+   Us," before the experience cards — so trust is established before the
+   sales pitch, not after.
+8. **What should they do next?** The final CTA is clear (`Book Your Spot`
+   / `Partner With Us`), though see point 5 — "Book Your Spot" currently
+   routes to `/events`, which has nothing to book yet.
+
+### Experience page recommendations
+
+Direct answer to this checkpoint's specific question: as built today, the
+three experience pages **are** close to the generic Hero → text → card →
+FAQ → CTA pattern, honestly assessed. Distinguishing what can move each
+page forward:
+
+**Can improve with current verified information (no new facts needed):**
+- Reformat the FAQ to stop restating the bullet lists above it — either
+  drop the FAQ section on these pages entirely (the info is already
+  presented, just not as Q&A) or replace the three redundant questions
+  with something the current data doesn't already show as a list, framed
+  differently (e.g., a synthesized "why this one vs. the other two"
+  comparison using the three experiences' own verified taglines).
+- Give each of the three pages a more distinct visual identity from each
+  other using only the design tokens already available (e.g., a subtler
+  wine-toned accent on After Dark vs. a warmer gold-forward treatment on
+  Little Creators) — currently all three use identical layout and color
+  treatment, differing only in text.
+
+**Requires photography/creative assets:**
+- A second and third image per experience (currently one hero image
+  each) to support image/text alternation through the page.
+- Atmosphere-building imagery distinct per experience, matching the mood
+  guidance in the Photography Strategy below.
+
+**Requires owner information (do not fabricate):**
+- Any experience-specific social proof (a testimonial that specifically
+  mentions After Dark vs. Little Creators) — the 6 verified testimonials
+  aren't attributed to a specific experience type, so none can be
+  reassigned to a specific page without inventing that connection.
+- Real logistics an FAQ could genuinely answer (typical session length,
+  cancellation policy, age range specifics beyond "21+") — none of this
+  was captured in the audit; **Trust opportunity — owner verification
+  required.**
+
+### Founder presentation recommendations
+
+- Current placement is reasonably strong on About (third section in) but
+  arguably too late on Home (see Homepage recommendations point 7) —
+  recommend moving `FounderTeaser` earlier in Home's section order for
+  the next stage.
+- **A photograph would materially improve trust** — unambiguous, and
+  already the #2 priority asset in the Creative Asset Map below (behind
+  only the hero).
+- The verified bio/quote are already visually elevated appropriately on
+  the Home teaser (large serif quote treatment); on About, the bio
+  paragraph is plain body text — a minor opportunity to set the opening
+  sentence in a slightly larger pull-quote treatment, not urgent.
+- **Recommended photograph type**: not a stiff studio headshot — ideally
+  Natassha in an actual event/studio context (e.g., mid-instruction to
+  guests), which would simultaneously deliver founder trust *and* real
+  event atmosphere in a single asset. This is reflected as the
+  recommended composition in the Photography Strategy below.
+- The site should not become founder-centric — current balance (one
+  teaser + one full section, out of 9 pages) is appropriate and should
+  stay roughly that proportion even after a photo is added.
+
+### Photography strategy
+
+Full per-asset strategy, most important assets first. "Real photography
+or AI-generated" is stated explicitly for every asset per instruction.
+
+**Homepage Hero**
+- Page: Home
+- Purpose: Establish atmosphere and immediately communicate that Creative
+  Dynasty creates memorable social experiences — the single highest-
+  trust, highest-visibility image on the site.
+- Recommended subject: guests actively engaged — painting, laughing,
+  talking — in ambient event lighting, not a posed group photo.
+- Recommended composition: wide environmental shot with people mid-action
+  (not looking at camera); subject weight in the upper-to-center frame,
+  since the lower third is covered by the headline/CTA gradient overlay.
+- Orientation: wide/cinematic landscape.
+- Approx. aspect ratio: ~21:9 desktop, must survive a hard crop to ~4:5
+  mobile.
+- Real or AI: **Real, required.** AI-generated people standing in for
+  actual guests would misrepresent what the events look like.
+- Priority: **CRITICAL**
+
+**Experience Hero/Card Images (×3 — After Dark, Little Creators, The
+Collective)**
+- Page: Home (cards), Private Bookings (cards), each `/experiences/*`
+  detail page (hero)
+- Purpose: differentiate three distinct real offerings at a glance and
+  set each experience's own atmosphere.
+- Recommended subject: one representative photo per experience —
+  After Dark: guests mid-activity in low, moody lighting; Little
+  Creators: a parent and child painting together, bright and warm;
+  The Collective: a small group in conversation around shared canvases,
+  mid-tone lighting.
+- Recommended composition: subject in the upper two-thirds of frame
+  (cards overlay no text on the image); each should be visually
+  distinguishable from the other two at a glance, not just by caption.
+- Orientation: portrait.
+- Approx. aspect ratio: 4:5.
+- Real or AI: **Real, required** — these represent three distinct real
+  paid offerings; a customer booking "The Collective" based on an AI
+  image of a different vibe would be misled.
+- Priority: **CRITICAL**
+
+**Founder Portrait — Natassha Johnson**
+- Page: Home (teaser), About (full section)
+- Purpose: put a real person behind the brand — the second-highest-
+  leverage trust asset on the site after the hero.
+- Recommended subject: Natassha, ideally in an actual event/studio
+  context (e.g., mid-instruction to guests) rather than a stiff studio
+  headshot — doubles as founder trust *and* real event atmosphere.
+- Recommended composition: face/shoulders in the upper-to-center frame so
+  both a circular 1:1 crop (Home teaser) and a rounded-square 4:5 crop
+  (About) keep the face fully visible from one original.
+- Orientation: portrait (crops to square for the Home teaser).
+- Approx. aspect ratio: 4:5 original.
+- Real or AI: **Real, required, no exceptions.** Never AI-generate or
+  substitute a stand-in for a real, named person.
+- Priority: **HIGH**
+
+**Gallery / Portfolio Grid (6+ images)**
+- Page: Home
+- Purpose: the section's entire purpose is proving real past events
+  happened — nothing else can substitute for this.
+- Recommended subject: variety across the 4 verified categories
+  (Signature/Social/Family/Private) — wide room shots, close-up canvas
+  work, candid guest moments.
+- Recommended composition: candid, real, "unpolished-but-professional"
+  (matches the Ecoverde benchmark's real-work-photo pattern) rather than
+  staged/posed shots.
+- Orientation: mixed portrait/landscape (the masonry layout already
+  handles mixed ratios).
+- Approx. aspect ratio: mixed; ~1000px minimum on the short edge.
+- Real or AI: **Real, required, no exceptions.**
+- Priority: **HIGH**
+
+**About — "Our Story" supporting image**
+- Page: About
+- Purpose: give the brand-origin narrative visual support — currently
+  three paragraphs of pure text.
+- Recommended subject: an early/founding-era event moment, or the
+  founder at work, if a real one exists.
+- Recommended composition: editorial, quieter than the hero — a single
+  strong image rather than a grid.
+- Orientation: portrait or square.
+- Real or AI: preferred real; if none exists, this section can remain
+  text-only rather than force a photo that doesn't tell a true story —
+  **Trust opportunity — owner verification required** on whether a
+  real founding-era photo exists at all.
+- Priority: **MEDIUM**
+
+**Experience Detail Pages — secondary/atmosphere images**
+- Page: each `/experiences/*` page
+- Purpose: break up the current text-only middle section; support
+  image/text alternation for a less generic page structure.
+- Recommended subject: hands/materials, finished artwork, or a
+  mid-activity close-up specific to that experience.
+- Recommended composition: close-up/detail shots, distinct from the
+  wider hero image already used.
+- Orientation: flexible (landscape strips or square insets work with the
+  current 2-column layout).
+- Real or AI: real preferred; a tightly-cropped abstract detail shot
+  (e.g., paint texture) could acceptably be AI-generated *only* if it's
+  clearly non-figurative and never implies a real moment.
+- Priority: **MEDIUM**
+
+**Private Bookings — hero/supporting image**
+- Page: Private Bookings
+- Purpose: sell the private-booking experience specifically (distinct
+  from the public-event framing elsewhere).
+- Recommended subject: a table set up with painting supplies and food —
+  the "complete experience" framing already used in the copy.
+- Composition: wide environmental/tablescape shot.
+- Orientation: landscape.
+- Real or AI: preferred real; generic decorative texture acceptable as a
+  fallback only.
+- Priority: **MEDIUM**
+
+**Contact page — supporting texture**
+- Page: Contact
+- Purpose: visual interest only, no claim of reality.
+- Recommended subject: abstract brushstroke/paint texture, no people.
+- Real or AI: **AI-generated is appropriate here** — explicitly
+  non-figurative, decorative only.
+- Priority: **LOW**
+
+**Social share image (`og:image`)**
+- Not a new photoshoot — deliberately deferred until a hero or founder
+  photo is approved, since reusing one of those is the natural source.
+- Priority: **LOW** (sequenced after the assets above, not before)
+
+### Creative Asset Map
+
+Consolidated production plan for the next stage. No images are being
+created yet — this is the plan.
+
+| Asset | Page | Purpose | Orientation | Approx. Ratio | Real Photo / AI | Priority | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Homepage hero | Home | Atmosphere + immediate credibility | Wide/cinematic | ~21:9 → 4:5 mobile crop | Real, required | CRITICAL | Placeholder only |
+| After Dark hero/card | Home, Private Bookings, /experiences/after-dark | Differentiate the experience | Portrait | 4:5 | Real, required | CRITICAL | Placeholder only |
+| Little Creators hero/card | Home, Private Bookings, /experiences/little-creators | Differentiate the experience | Portrait | 4:5 | Real, required | CRITICAL | Placeholder only |
+| The Collective hero/card | Home, Private Bookings, /experiences/the-collective | Differentiate the experience | Portrait | 4:5 | Real, required | CRITICAL | Placeholder only |
+| Founder portrait | Home (teaser), About (full) | Personal trust | Portrait (crops to 1:1 + 4:5) | 4:5 original | Real, required, no exceptions | HIGH | Monogram placeholder — no photo exists |
+| Gallery grid (6+ images) | Home | Prove real events happened | Mixed | Mixed, 1000px+ short edge | Real, required, no exceptions | HIGH | 6 gradient placeholders |
+| About "Our Story" image | About | Support brand-origin narrative | Portrait/square | — | Real preferred; may stay text-only | MEDIUM | Not built (text-only currently) |
+| Experience detail secondary images | Each /experiences/* page | Image/text alternation | Flexible | — | Real preferred; abstract-only AI acceptable | MEDIUM | Not built (one hero image each currently) |
+| Private Bookings hero/support | Private Bookings | Sell the booking experience | Landscape | — | Real preferred | MEDIUM | Not built (no image on this page currently) |
+| Contact texture | Contact | Decorative only | Any | — | **AI appropriate** — abstract only | LOW | Not built |
+| Social share image (og:image) | Sitewide | Link-preview credibility | Landscape | 1.91:1 (OG standard) | Sourced from hero/founder once approved | LOW | Not built (deliberately deferred) |
+
+### Mobile creative observations (code-level only — not device-verified)
+
+- **Hero headline likely wraps to 3+ lines on 375–430px screens.** The
+  headline sits at a fixed `text-5xl` (≈48px) from the smallest screen up
+  to the `sm` breakpoint (640px), with no intermediate step-down. At that
+  size, "Immersive Gatherings." alone is wider than the ~340px of
+  available width on a 375px screen before any wrapping — combined with
+  the existing forced `<br/>` before "Elevated Culture.", the hero
+  headline likely renders as 3–4 lines on the smallest common phone
+  widths, which could feel visually heavy for what's meant to be a punchy
+  opening moment. Recommend a mobile-specific size step (e.g., `text-4xl`
+  base, stepping up through `sm:text-6xl`) — not changed in this pass, a
+  design call best paired with the eventual hero image crop.
+- **Experience cards mean a long stack on mobile.** `SignatureExperiences`
+  and `ExperienceCard` grids collapse to a single column below `sm`, so
+  three consecutive full-width 4:5 portrait cards stack vertically —
+  meaningfully more scrolling for this one section on a phone than the
+  side-by-side desktop presentation suggests. Not broken, but worth
+  knowing before real (larger) photography goes in, since taller real
+  images will extend this further.
+- **A real mobile-vs-desktop button-width inconsistency exists** (see
+  "tiny fix considered and reverted" note above): `Hero.astro`'s CTAs go
+  full-width on mobile; every other page's CTAs (via `Button.astro`) stay
+  content-width. Worth a deliberate decision in the next stage — likely
+  "full-width only when two CTAs are paired in a stacked row," since
+  standalone single CTAs looked worse forced to full width when tested.
+- **Founder section stacks cleanly** — the `lg:grid-cols-[280px_1fr]`
+  layout collapses to one column below `1024px` (i.e., on all phones),
+  photo centered above text at a safe fixed 224px width. No issue found.
+- **Forms, testimonials, navigation**: re-reviewed, no new issues beyond
+  what Checkpoint 3 already found and fixed.
+
+### Premium design scorecard (qualitative — not scored numerically)
+
+| Dimension | Assessment |
+| --- | --- |
+| Brand impression | **Strong** — the dark ink/gold palette + serif display face is distinct, not generic, and used consistently |
+| Visual hierarchy | **Needs refinement** — heading treatment is uniform across every section sitewide with no variation |
+| Photography | **Creative asset required** — every image slot is a placeholder; this is the single biggest lever available |
+| Typography | **Strong** — Fraunces/Inter pairing and the size scale are used consistently and read as intentional |
+| Section rhythm | **Significant opportunity** — the centered-heading + 3-card-grid pattern repeats across nearly every page |
+| Experience presentation | **Significant opportunity** — currently close to the generic Hero→text→FAQ→CTA template; see specific recommendations above |
+| Founder/trust | **Needs refinement** — good verified content and placement instinct (About), but no photo and could surface earlier on Home |
+| Conversion hierarchy | **Strong** — CTA styling is consistent and legible; one strategic question flagged (Browse Events as primary Hero CTA with zero live events) |
+| Mobile experience | **Needs refinement** — no overflow bugs found, but hero text sizing and card-stack length are real code-level concerns pending device verification |
+| Content depth | **Strong** — About in particular is genuinely content-rich; every page uses real, verified copy |
+| Page differentiation | **Needs refinement** — Private Bookings stands out with real layout variety; most other pages could be told apart mainly by their text, not their visual treatment |
+| Premium perception overall | **Significant opportunity, gated on photography** — the structural/content foundation supports a premium feel; it isn't visible yet because every trust-critical image is a placeholder |
+
+### Technical recommendations (Claude Code should implement)
+
+- Decide and implement a consistent mobile button-width rule (full-width
+  only when CTAs are paired in a stacked row vs. always content-width for
+  standalone CTAs) — the judgment call reverted in this pass, ready to
+  implement once a rule is chosen.
+- A hero headline mobile size step (e.g. `text-4xl` base →
+  `sm:text-6xl`) to reduce likely 3+ line wrapping on narrow phones.
+- Once real images exist: responsive `srcset`/sizing and the actual crop
+  implementation per the aspect ratios specified in the Creative Asset
+  Map — no code changes needed today, the slots are already built to
+  receive them.
+- Resurface each experience's primary audience (`whoItsFor[0]`) as a
+  small tag on the homepage `ExperienceCard` — uses only data already in
+  `src/data/experiences.ts`, no new content needed.
+
+### Creative recommendations (art direction / photography / copy — not code)
+
+- Vary section-opening treatment on at least one section per page (e.g.,
+  a left-aligned or asymmetric moment) once real imagery provides
+  something worth building a non-centered layout around.
+- Give the three experience detail pages distinct visual identities from
+  each other (subtle per-experience accent treatment) rather than
+  identical layout differing only in text.
+- Rework or remove the experience-page FAQ so it stops restating content
+  already shown as bullets/pills earlier on the same page.
+- Merge or visually distinguish Home's "Why Choose Us" and "Rooted in
+  Community" sections so they don't read as near-duplicates.
+- Reconsider Home's `FounderTeaser` placement (earlier, before the
+  experience cards) once photography work begins.
+- Elevate the About page's opening bio sentence with a pull-quote-style
+  treatment (minor).
+
+### Owner-required items (unchanged from prior checkpoints, plus new trust-opportunity flags)
+
+Carried forward: contact email spelling, phone/address, real Facebook
+URL, Instagram currency, founder photo approval, general photography
+approval (`AUDIT.md` §7–8 / Owner requirements above). **New from this
+pass:**
+
+- **Trust opportunity — owner verification required**: whether any real
+  founding-era photo exists for About's "Our Story" section.
+- **Trust opportunity — owner verification required**: any real
+  operational FAQ content (session length, cancellation policy, age
+  specifics) that could make the experience-page FAQ genuinely useful
+  rather than redundant with content already on the page.
+- No new trust signals were invented anywhere in this audit — every gap
+  identified above is logged as a real opportunity requiring either
+  photography or owner input, never filled with placeholder claims.
+
+### Recommended next stage
+
+**Premium creative and visual production** — sourcing/approving real
+photography per the Creative Asset Map (hero and the three experience
+images first, per CRITICAL priority), the founder photo, then working
+through the creative recommendations above once real imagery makes
+layout variation meaningful. This is squarely an art-direction and
+photography stage, not an architecture or technical stage — the
+technical recommendations above are small and can be folded in
+alongside the creative work rather than requiring their own checkpoint.
+
+---
 
 - Audit before implementing (Checkpoint 1 — done, see `AUDIT.md`).
 - Never invent events, dates, locations, testimonials, partnerships,
