@@ -1,6 +1,6 @@
 # Creative Dynasty Events — Project Handoff
 
-Last updated: 2026-09-28
+Last updated: 2026-09-28 (owner requirements + Creative Asset Plan added)
 This file is the source of truth for project status across sessions. Read
 it before doing any further work on this repo.
 
@@ -194,6 +194,76 @@ Reconcile `src/data/events.ts`, `src/data/gallery.ts`, and
 stops showing fabricated content — this is the fastest way to get the
 temporary URL to a state that's actually safe to show the owner. Then
 proceed to Checkpoint 5 (internal pages) using the IA in `AUDIT.md` §5.
+
+---
+
+## Owner requirements (prioritized, updated 2026-09-28)
+
+Reorganized from `AUDIT.md` §7–8 into the 10 priority areas the user asked
+for, each marked as a **blocker** (final content can't be published
+without it) or **can wait** (doesn't stop other work). Nothing here is
+invented — every "known" value is copied verbatim from `AUDIT.md`, and
+every gap stays `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` until
+the owner answers.
+
+| # | Area | Status | Blocker? |
+| - | --- | --- | --- |
+| 1 | Organization contact info | Email found: `creativedynastevents3@gmail.com` (verified `mailto:` on live site) but spelling is unusual — needs owner confirmation it's correct, not a typo. Phone: `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]`. Address: `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` (or confirmation there isn't one to publish). | **Blocker** for a final, trustworthy Contact section and for `wrangler.toml` `TO_EMAIL`. |
+| 2 | Social media URLs | Instagram found (`instagram.com/creative_dynasty_events`) but unconfirmed as current/owner-controlled. Facebook is confirmed **wrong** (links to `facebook.com/wix`) — real URL is `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]`. TikTok/other: `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]`. | **Blocker** for publishing any social links (better to omit than publish wrong/unconfirmed ones). |
+| 3 | Founder info + approved photo | Name, quote, and bio verified (`AUDIT.md` §4 — Natassha Johnson). **No approved founder photograph confirmed** — the 9 real images found on the live site are general event photos, not a confirmed headshot. `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` for a founder photo specifically. | **Blocker** only for the founder-photo asset; the bio/quote text is already safe to use. |
+| 4 | Current experiences/programs offered | Fully verified: After Dark, Little Creators, The Collective — names, taglines, full descriptions, "who it's for," "what's included" all confirmed (`AUDIT.md` §4). | Not a blocker — ready to use as-is. |
+| 5 | Public events currently scheduled | Verified: the live site shows **zero** ("No events at the moment"). Owner should confirm whether this is accurate/current or the Wix site is simply stale. | Not a blocker for building the events system (an honest empty state is a valid, correct state) — only a blocker for populating actual events. |
+| 6 | Event dates, locations, pricing, registration | None exist yet (depends on #5). `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` for all fields, per event, once any are scheduled. | Blocker for populating real events; not a blocker for building the event template/status-state logic. |
+| 7 | Private-event/booking process | Fully verified: 3-step process, full field list from both existing forms, "perfect for" categories, what's included (`AUDIT.md` §4). | Not a blocker — ready to use as-is. |
+| 8 | Verified testimonials/reviews | 6 verified quotes captured verbatim (`AUDIT.md` §4) — 3 attributed by first name (Erica, Leah, Christine), 3 unattributed. These were already public on the live site. Recommend a light owner confirmation that these may be reused on the new site, but this is a formality, not a real unknown. | Not a real blocker — can proceed with these; flag the reuse confirmation as a courtesy check. |
+| 9 | Legitimate review platform for a review-count signal | No evidence of an aggregated review platform (no Google Business Profile, Checkatrade-equivalent, etc. found anywhere in the audit). `[CONTENT REQUIRED FROM CREATIVE DYNASTY EVENTS]` if one exists. | Not a blocker — this trust-signal pattern (see Ecoverde reference below) is simply omitted until/unless confirmed. Never invent a count. |
+| 10 | Approved photography + permission | 9 real media assets identified on the live Wix site (`AUDIT.md` §4), but no owner confirmation on which are approved for reuse, whether higher-resolution originals exist, or whether the one confirmed AI-generated asset should be kept, replaced, or dropped. | **Blocker** for finalizing real imagery — but see "Creative Asset Plan" below for how the layout can proceed without waiting. |
+
+### Summary
+
+**Real blockers** (final content cannot be published without these): #1
+(phone/address + email confirmation), #2 (real social URLs), #3 (founder
+photo), #10 (photo approval). Everything else in this content set is
+either already fully usable (#4, #7, #8) or has an honest interim state
+that doesn't require the answer to keep building (#5, #6, #9).
+
+---
+
+## Creative Asset Plan
+
+Documents every meaningful image slot in the planned site so the layout
+can be built now and real photography (or, where explicitly appropriate,
+AI-generated supporting imagery) can be dropped in later without
+restructuring anything. **No images are being sourced or generated at
+this stage** — this is planning only.
+
+Ground rule carried over from the project brief: AI-generated imagery may
+only be used where it's clearly generic/abstract and could never be
+mistaken for a real Creative Dynasty Events event, customer, or the
+founder. Anywhere a slot says "real preferred," AI imagery is not an
+acceptable permanent substitute — at most a neutral placeholder until real
+photography is approved.
+
+| Section | Purpose | Orientation / aspect ratio | Recommended subject | Real photography? | AI-generated appropriate? |
+| --- | --- | --- | --- | --- | --- |
+| Home — Hero | First impression; sets the "art-infused experience" tone | Wide/landscape, full-bleed (~21:9 desktop, crops to ~4:5 mobile) | Guests actively painting/mingling in ambient event lighting | **Strongly preferred** — this is the site's core credibility moment | No — would misrepresent what the events actually look like |
+| Home — "More Than Events" support image | Reinforces the sensory-experience message | Portrait or square | Close-up: canvas, brushes, shared table, food | Preferred | Only as an abstract texture (e.g. paint-splatter), never depicting people |
+| Home — Signature Experiences (3 cards) | Differentiate After Dark / Little Creators / The Collective | Square or 4:5 portrait, one per card | One representative real photo per experience type | **Strongly preferred** — these are three distinct real offerings | No |
+| Home — Testimonials | Humanize the 6 verified quotes | Small circular avatar, if used at all | N/A — no verified customer photos exist | N/A | **No** — do not use stock/AI faces standing in for real reviewers; use initials/monogram instead |
+| About / Home — Founder | Builds personal trust (see Ecoverde reference pattern) | Portrait, 4:5 or 1:1 | Natassha Johnson | **Required to be real** — see Owner requirements #3 | Never |
+| About — "Rooted in Community" | Shows local-business partnership | Wide/landscape | Community/partner event moment | Preferred | Acceptable only as generic decorative background if no real photo exists |
+| Events — category tiles (Signature/Social/Family/Private) | Visually differentiate the 4 real filter categories | Square, one per tile | Representative real photo per category | Preferred | Acceptable as neutral abstract placeholder until real photos are sorted by category |
+| Events — individual event card | Represents a specific scheduled event | Landscape thumbnail | Photo from a comparable past event, once one exists | Preferred once available | No — never imply a specific fabricated event happened; use a plain neutral/no-image state until real events exist |
+| Private Bookings — hero/support image | Sells the private-booking experience | Wide/landscape | Table set up with painting supplies + food | Preferred | Acceptable only as generic decorative texture |
+| Portfolio/Gallery grid | Entire purpose is proving real past events happened | Mixed portrait/landscape, masonry | The 4 real event photos already identified (`AUDIT.md` §4), plus any newly approved ones | **Required to be real, no exceptions** | Never — AI imagery here would be actively misleading |
+| Contact page | Supporting visual texture only, no claims of reality | Any | Abstract brushstroke/paint texture | Not needed | Acceptable — no people or event implied |
+| Sitewide — logo/favicon | Brand mark | Square/icon | Existing "Cd submark logo" asset (already brand-approved, already in use) | Already real and approved | N/A |
+
+Note: the one existing asset filenamed `ChatGPT Image Apr 11, 2026,
+09_42_18 AM.png` (confirmed AI-generated, `AUDIT.md` §2.9) should only ever
+be considered for a slot marked "AI-generated appropriate," never for a
+"real preferred/required" slot — pending owner decision per Owner
+requirements #10.
 
 ---
 
