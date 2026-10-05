@@ -1,29 +1,34 @@
 ---
-// Checkpoint 5: reworked from a uniform 3-column masonry grid (Checkpoint
-// 4's "most visually inert section" finding, and the only section on the
-// site using a filterable card-directory pattern) into an intentional
-// editorial arrangement — one full-width feature image plus a smaller
-// supporting grid, varied proportions instead of six identical tiles.
+// Editorial photography layout (premium visual refinement pass).
 //
-// The category filter buttons/JS from the previous version were removed
-// as part of this change, not preserved alongside it: an asymmetric
-// feature-plus-supporting layout and a dynamically-filterable grid pull
-// in opposite directions (filtering the feature image away would leave a
-// dead gap where the layout's whole composition depends on it being
-// there). A curated, editorial mosaic doesn't need interactive filtering
-// to feel premium — most high-end portfolio sections don't have one — and
-// dropping it is also less JavaScript for six placeholder images, which
-// fits this checkpoint's technical-discipline instruction. Categories are
-// still real data (see src/data/gallery.ts) and remain in each image's
-// alt text; only the interactive filter UI was removed.
+// Structure, top to bottom:
+//   1. One full-width landscape feature image.
+//   2. Five supporting images in an asymmetric 12-column grid on desktop,
+//      a calm two-column grid on mobile. Varied proportions, one column
+//      offset, no captions.
+//
+// The category filter was removed earlier (Checkpoint 5) because it
+// conflicted with an asymmetric feature composition. Nothing here is
+// interactive, so there is no gallery JavaScript.
 import { gallery } from "../data/gallery";
 
 const [feature, ...supporting] = gallery;
+
+// Per-position layout. Mobile: a full-width feature, then pairs of halves,
+// then a full-width close. Desktop: wide + narrow, then three equal columns,
+// with the narrow column offset to break the rhythm.
+const supportingLayout = [
+  "col-span-2 md:col-span-7 aspect-[3/2]",
+  "col-span-1 md:col-span-5 md:mt-16 aspect-[4/5]",
+  "col-span-1 md:col-span-4 aspect-[4/5]",
+  "col-span-1 md:col-span-4 aspect-[4/5]",
+  "col-span-2 md:col-span-4 aspect-[4/5]",
+];
 ---
 
-<section id="gallery" class="bg-ink-soft py-24 sm:py-32">
+<section id="gallery" class="bg-ink-soft py-20 sm:py-28">
   <div class="mx-auto max-w-7xl px-6 lg:px-10">
-    <div class="mx-auto mb-10 max-w-2xl text-center">
+    <div class="reveal mx-auto mb-12 max-w-2xl text-center sm:mb-16">
       <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta">Curated Portfolio</p>
       <h2 class="mt-3 font-display text-balance text-4xl text-paper sm:text-5xl">
         Moments from past gatherings
@@ -34,34 +39,28 @@ const [feature, ...supporting] = gallery;
       </p>
     </div>
 
-    <div class="grid grid-cols-1 gap-4">
-      {feature && (
-        <figure class="overflow-hidden rounded-2xl border border-line bg-surface">
-          <div class="aspect-[16/9] sm:aspect-[21/9]">
-            <img
-              src={feature.src}
-              alt={feature.alt}
-              loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-            />
-          </div>
-        </figure>
-      )}
+    {feature && (
+      <figure class="reveal overflow-hidden rounded-md">
+        <img
+          src={feature.src}
+          alt={feature.alt}
+          loading="lazy"
+          class="aspect-[3/2] w-full object-cover md:aspect-[16/9]"
+        />
+      </figure>
+    )}
 
-      <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {supporting.map((item) => (
-          <figure class="overflow-hidden rounded-2xl border border-line bg-surface">
-            <div class="aspect-[4/5]">
-              <img
-                src={item.src}
-                alt={item.alt}
-                loading="lazy"
-                class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-              />
-            </div>
-          </figure>
-        ))}
-      </div>
+    <div class="mt-4 grid grid-cols-2 gap-4 sm:mt-6 sm:gap-6 md:grid-cols-12">
+      {supporting.map((item, i) => (
+        <figure class={`reveal overflow-hidden rounded-md ${supportingLayout[i] ?? "col-span-1 md:col-span-4 aspect-[4/5]"}`}>
+          <img
+            src={item.src}
+            alt={item.alt}
+            loading="lazy"
+            class="h-full w-full object-cover"
+          />
+        </figure>
+      ))}
     </div>
   </div>
 </section>

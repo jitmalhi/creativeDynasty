@@ -67,3 +67,31 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
+
+/*
+  Restrained reveal motion (premium visual refinement pass).
+  Only applies when JavaScript has marked the page (.js), so content is
+  always visible without JS. Disabled entirely for reduced-motion users.
+  Movement is a short fade with 12px of rise: no scale, no bounce, no
+  parallax, and no layout shift (transform only).
+*/
+.js .reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal,
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

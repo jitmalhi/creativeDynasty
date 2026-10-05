@@ -39,6 +39,7 @@ const organizationSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>document.documentElement.classList.add("js");</script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
@@ -72,5 +73,25 @@ const organizationSchema = {
   <body class="pb-16 md:pb-0">
     <slot />
     {showBookingBar && <StickyBookingBar />}
+    <script>
+      // Reveal elements marked .reveal once they scroll into view. Stops
+      // observing after the first reveal, and does nothing for reduced-motion
+      // users (their CSS shows content immediately).
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const els = document.querySelectorAll(".reveal");
+      if (reduce || !("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("is-visible"));
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-visible");
+              io.unobserve(e.target);
+            }
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
   </body>
 </html>

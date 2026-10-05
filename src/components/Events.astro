@@ -16,7 +16,7 @@ const statusClass: Record<EventStatus, string> = {
 };
 ---
 
-<section id="events" class="bg-ink py-24 sm:py-32">
+<section id="events" class="bg-ink py-20 sm:py-28">
   <div class="mx-auto max-w-5xl px-6 lg:px-10">
     <div class="mx-auto mb-14 max-w-2xl text-center">
       <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta">Upcoming Events</p>
@@ -40,7 +40,7 @@ const statusClass: Record<EventStatus, string> = {
           </p>
           <a
             href="/private-bookings#request"
-            class="inline-flex items-center justify-center rounded-full border border-terracotta/60 px-6 py-2.5 text-sm font-semibold text-terracotta transition-colors hover:bg-terracotta hover:text-white"
+            class="inline-flex items-center justify-center rounded-full border border-deep/50 px-6 py-2.5 text-sm font-semibold text-deep transition-colors hover:bg-deep hover:text-white"
           >
             Book a Private Experience
           </a>
@@ -69,7 +69,7 @@ const statusClass: Record<EventStatus, string> = {
               {event.status === "registration-open" && event.registrationHref ? (
                 <a
                   href={event.registrationHref}
-                  class="inline-flex shrink-0 items-center justify-center rounded-full border border-terracotta/60 px-6 py-2.5 text-sm font-semibold text-terracotta transition-colors hover:bg-terracotta hover:text-white"
+                  class="inline-flex shrink-0 items-center justify-center rounded-full border border-deep/50 px-6 py-2.5 text-sm font-semibold text-deep transition-colors hover:bg-deep hover:text-white"
                 >
                   Reserve Your Seat
                 </a>
