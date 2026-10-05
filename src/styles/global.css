@@ -1,24 +1,34 @@
 @import "tailwindcss";
 
+/*
+  Light, warm, gallery-style palette (premium visual refinement brief).
+  The photography and artwork carry the colour; the site stays calm.
+  Every text/background pair used on the site was checked against WCAG AA
+  (4.5:1 for normal text). Note: "ink" is now the PAGE BACKGROUND token
+  (warm ivory), and "paper" is the primary TEXT token (deep ink) — the
+  names predate this palette and are kept so existing classes keep working.
+*/
 @theme {
-  /* Core palette — dark, gallery-like, warm gold accent */
-  --color-ink: #0b0a09;
-  --color-ink-soft: #14120f;
-  --color-surface: #1b1815;
-  --color-surface-soft: #24201b;
-  --color-line: #332d25;
+  --color-ink: #f7f3ec;          /* page background — warm ivory */
+  --color-ink-soft: #efe8dc;     /* alternate section background */
+  --color-surface: #ffffff;      /* cards and panels */
+  --color-surface-soft: #f3ece0;
+  --color-line: #d9cfc0;         /* hairline borders */
 
-  --color-paper: #f6f1e7;
-  --color-smoke: #b9b1a3;
-  --color-smoke-dim: #8a8276;
+  --color-paper: #22333b;        /* primary text — deep ink */
+  --color-smoke: #4b5c64;        /* secondary text */
+  --color-smoke-dim: #5a6a72;    /* muted text (passes AA on ivory) */
 
-  --color-gold: #cf9f3f;
-  --color-gold-soft: #e4c374;
-  --color-wine: #6e2740;
-  --color-wine-soft: #9a3e5c;
+  --color-deep: #22333b;         /* primary button fill, dark UI */
+  --color-deep-slate: #1d292f;   /* occasional dark section / footer */
 
-  --font-display: "Fraunces", "Iowan Old Style", "Georgia", serif;
-  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --color-terracotta: #b84d4d;   /* creative accent — CTAs, links, highlights */
+  --color-teal: #0f7778;         /* supporting accent — icons, labels, details */
+  --color-peach: #f3c3a0;        /* soft secondary accent */
+  --color-white: #ffffff;
+
+  --font-display: "DM Serif Display", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Manrope", "Segoe UI", system-ui, sans-serif;
 }
 
 @layer base {
@@ -34,8 +44,8 @@
   }
 
   ::selection {
-    background-color: var(--color-gold);
-    color: var(--color-ink);
+    background-color: var(--color-terracotta);
+    color: var(--color-white);
   }
 }
 

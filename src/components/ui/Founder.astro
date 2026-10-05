@@ -21,21 +21,21 @@ const initials = founder.name
         // Monogram placeholder, not a stand-in photo, so nothing here could
         // be mistaken for Natassha Johnson.
         <div
-          class="flex aspect-square w-56 items-center justify-center rounded-3xl border border-dashed border-gold/40 bg-surface lg:w-full"
+          class="flex aspect-square w-56 items-center justify-center rounded-3xl border border-dashed border-terracotta/40 bg-surface lg:w-full"
           role="img"
           aria-label={`${founder.name} — photo pending owner approval`}
         >
-          <span class="font-display text-5xl text-gold-soft">{initials}</span>
+          <span class="font-display text-5xl text-teal">{initials}</span>
         </div>
       )
     }
   </div>
 
   <div>
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Meet the Founder</p>
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta">Meet the Founder</p>
     <h3 class="mt-2 font-display text-3xl text-paper">{founder.name}</h3>
     <p class="mt-1 text-sm text-smoke-dim">{founder.role}</p>
-    <blockquote class="mt-5 font-display text-xl text-gold-soft">"{founder.quote}"</blockquote>
+    <blockquote class="mt-5 font-display text-xl text-teal">"{founder.quote}"</blockquote>
     <p class="mt-5 max-w-xl text-smoke">{founder.bio}</p>
   </div>
 </div>

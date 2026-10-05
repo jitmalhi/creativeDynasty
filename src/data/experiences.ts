@@ -23,7 +23,7 @@ export type Experience = {
    * per-experience variation without three separate page architectures.
    * See HANDOFF.md "Checkpoint 5" for the reasoning behind each value.
    */
-  accent: "gold" | "wine";
+  accent: "terracotta" | "teal";
   imageSide: "left" | "right";
   /** Which two-column block reads first: audience-first ("who") or atmosphere-first ("expect"). */
   leadWith: "who" | "expect";
@@ -61,7 +61,7 @@ export const experiences: Experience[] = [
     // Moody/adults-only tone ("Bold. Expressive. Unforgettable.") — wine
     // accent, atmosphere-first framing, image on the right (the default
     // reading order for the first card in the set).
-    accent: "wine",
+    accent: "terracotta",
     imageSide: "right",
     leadWith: "expect",
   },
@@ -86,7 +86,7 @@ export const experiences: Experience[] = [
     // Warm/family tone — gold accent, audience-first framing ("this is for
     // families like yours" before logistics), image leads on the left for
     // a welcoming, visual-first first impression.
-    accent: "gold",
+    accent: "teal",
     imageSide: "left",
     leadWith: "who",
   },
@@ -111,7 +111,7 @@ export const experiences: Experience[] = [
     // Networking/collaboration tone — gold accent (distinct from After
     // Dark's wine), audience-first framing (who you'll meet/network with
     // is the draw), image on the right to differ from Little Creators.
-    accent: "gold",
+    accent: "teal",
     imageSide: "right",
     leadWith: "who",
   },

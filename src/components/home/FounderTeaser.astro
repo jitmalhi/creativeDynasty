@@ -16,11 +16,11 @@ const initials = founder.name
       ) : (
         // FOUNDER PHOTO — OWNER APPROVAL REQUIRED, see src/data/founder.ts
         <div
-          class="flex h-24 w-24 items-center justify-center rounded-full border border-dashed border-gold/40 bg-surface"
+          class="flex h-24 w-24 items-center justify-center rounded-full border border-dashed border-terracotta/40 bg-surface"
           role="img"
           aria-label={`${founder.name} — photo pending owner approval`}
         >
-          <span class="font-display text-2xl text-gold-soft">{initials}</span>
+          <span class="font-display text-2xl text-teal">{initials}</span>
         </div>
       )
     }
@@ -28,7 +28,7 @@ const initials = founder.name
     <blockquote class="font-display text-balance text-2xl text-paper sm:text-3xl">
       "{founder.quote}"
     </blockquote>
-    <p class="text-sm font-medium text-gold">
+    <p class="text-sm font-medium text-terracotta">
       {founder.name} <span class="text-smoke-dim">— {founder.role}</span>
     </p>
 

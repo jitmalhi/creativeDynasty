@@ -1,6 +1,8 @@
 ---
 import { experiences } from "../data/experiences";
 
+const { onDark = false } = Astro.props;
+
 const navLinks = [
   { label: "About", href: "/about" },
   { label: "Events", href: "/events" },
@@ -11,17 +13,17 @@ const navLinks = [
 
 <header
   id="site-header"
-  class="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
+  class:list={["fixed inset-x-0 top-0 z-50 transition-colors duration-300", onDark && "header-dark"]}
   data-scrolled="false"
 >
   <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-    <a href="/" class="font-display text-base tracking-wide text-paper sm:text-lg">
-      Creative Dynasty <span class="text-gold">Events</span>
+    <a href="/" class="hdr-brand font-display text-base tracking-wide text-paper sm:text-lg">
+      Creative Dynasty <span class="hdr-accent text-terracotta">Events</span>
     </a>
 
     <nav class="hidden items-center gap-8 md:flex">
       <div class="group relative">
-        <a href="/#experiences" class="flex items-center gap-1 text-sm font-medium text-smoke transition-colors hover:text-gold">
+        <a href="/#experiences" class="hdr-link flex items-center gap-1 text-sm font-medium text-smoke transition-colors hover:text-terracotta">
           Experiences
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -33,7 +35,7 @@ const navLinks = [
               experiences.map((exp) => (
                 <a
                   href={`/experiences/${exp.slug}`}
-                  class="rounded-xl px-3 py-2.5 text-sm font-medium text-smoke transition-colors hover:bg-ink-soft hover:text-gold"
+                  class="rounded-xl px-3 py-2.5 text-sm font-medium text-smoke transition-colors hover:bg-ink-soft hover:text-terracotta"
                 >
                   {exp.emoji} {exp.name}
                 </a>
@@ -47,7 +49,7 @@ const navLinks = [
         navLinks.map((link) => (
           <a
             href={link.href}
-            class="text-sm font-medium text-smoke transition-colors hover:text-gold"
+            class="hdr-link text-sm font-medium text-smoke transition-colors hover:text-terracotta"
           >
             {link.label}
           </a>
@@ -57,14 +59,14 @@ const navLinks = [
 
     <a
       href="/private-bookings"
-      class="hidden rounded-full border border-gold/60 px-5 py-2 text-sm font-medium text-gold transition-colors hover:bg-gold hover:text-ink md:inline-block"
+      class="hdr-cta hidden rounded-full border border-terracotta/60 px-5 py-2 text-sm font-medium text-terracotta transition-colors hover:bg-terracotta hover:text-white md:inline-block"
     >
       Book a Consultation
     </a>
 
     <button
       id="menu-toggle"
-      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-paper md:hidden"
+      class="hdr-toggle inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-paper md:hidden"
       aria-label="Open menu"
       aria-expanded="false"
     >
@@ -86,7 +88,7 @@ const navLinks = [
       experiences.map((exp) => (
         <a
           href={`/experiences/${exp.slug}`}
-          class="rounded-lg px-3 py-2.5 text-sm font-medium text-smoke transition-colors hover:bg-surface hover:text-gold"
+          class="rounded-lg px-3 py-2.5 text-sm font-medium text-smoke transition-colors hover:bg-surface hover:text-terracotta"
         >
           {exp.emoji} {exp.name}
         </a>
@@ -97,7 +99,7 @@ const navLinks = [
       navLinks.map((link) => (
         <a
           href={link.href}
-          class="rounded-lg px-3 py-3 text-sm font-medium text-smoke transition-colors hover:bg-surface hover:text-gold"
+          class="rounded-lg px-3 py-3 text-sm font-medium text-smoke transition-colors hover:bg-surface hover:text-terracotta"
         >
           {link.label}
         </a>
@@ -105,7 +107,7 @@ const navLinks = [
     }
     <a
       href="/private-bookings"
-      class="mt-2 rounded-full bg-gold px-5 py-3 text-center text-sm font-semibold text-ink"
+      class="mt-2 rounded-full bg-deep px-5 py-3 text-center text-sm font-semibold text-white"
     >
       Book a Consultation
     </a>
@@ -146,6 +148,14 @@ const navLinks = [
 </script>
 
 <style>
+  /* Over a dark hero photo (home page only), the header at the top of the page
+     needs light text. Once scrolled, it sits on the ivory background and uses
+     the normal colours. */
+  #site-header.header-dark[data-scrolled="false"] .hdr-brand,
+  #site-header.header-dark[data-scrolled="false"] .hdr-link { color: #ffffff; }
+  #site-header.header-dark[data-scrolled="false"] .hdr-accent { color: #f3c3a0; }
+  #site-header.header-dark[data-scrolled="false"] .hdr-cta { color: #ffffff; border-color: rgba(255,255,255,0.6); }
+  #site-header.header-dark[data-scrolled="false"] .hdr-toggle { color: #ffffff; border-color: rgba(255,255,255,0.4); }
   #site-header[data-scrolled="true"] {
     background-color: color-mix(in srgb, var(--color-ink) 92%, transparent);
     backdrop-filter: blur(10px);

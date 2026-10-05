@@ -17,9 +17,9 @@ const { items } = Astro.props;
   {
     items.map((item) => (
       <details class="group py-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg text-paper marker:content-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg text-paper marker:content-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta">
           {item.question}
-          <span class="shrink-0 text-gold transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+          <span class="shrink-0 text-terracotta transition-transform group-open:rotate-45" aria-hidden="true">+</span>
         </summary>
         <p class="mt-3 text-smoke">{item.answer}</p>
       </details>

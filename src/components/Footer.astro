@@ -12,13 +12,13 @@ const links = [
 <footer class="border-t border-line bg-ink py-12">
   <div class="mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 text-center lg:flex-row lg:justify-between lg:px-10 lg:text-left">
     <a href="/" class="font-display text-paper">
-      Creative Dynasty <span class="text-gold">Events</span>
+      Creative Dynasty <span class="text-terracotta">Events</span>
     </a>
 
     <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
       {
         links.map((link) => (
-          <a href={link.href} class="text-sm text-smoke transition-colors hover:text-gold">
+          <a href={link.href} class="text-sm text-smoke transition-colors hover:text-terracotta">
             {link.label}
           </a>
         ))
