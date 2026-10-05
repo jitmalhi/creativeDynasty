@@ -1,14 +1,18 @@
 ---
 import "../styles/global.css";
+import StickyBookingBar from "../components/StickyBookingBar.astro";
 
 interface Props {
   title?: string;
   description?: string;
+  /** Hide the mobile booking bar (e.g. on the booking page itself). */
+  showBookingBar?: boolean;
 }
 
 const {
   title = "Creative Dynasty Events — Where Creativity Meets Community",
   description = "Curated paint experiences designed to bring people together, spark creativity, and support local businesses.",
+  showBookingBar = true,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -65,7 +69,8 @@ const organizationSchema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   </head>
-  <body>
+  <body class="pb-16 md:pb-0">
     <slot />
+    {showBookingBar && <StickyBookingBar />}
   </body>
 </html>

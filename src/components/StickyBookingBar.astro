@@ -1,0 +1,14 @@
+<!--
+  Mobile-only booking bar, pinned to the bottom of the screen. Hidden on md+
+  (the header already carries a desktop booking button) and hidden on the
+  booking page itself via Layout's showBookingBar prop.
+  No animation and no JavaScript — pure CSS, so it costs nothing to load.
+-->
+<div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/95 px-4 py-3 backdrop-blur md:hidden">
+  <a
+    href="/private-bookings"
+    class="flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink"
+  >
+    Book a Private Experience
+  </a>
+</div>
