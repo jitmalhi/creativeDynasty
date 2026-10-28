@@ -4,18 +4,15 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 // `site` drives every canonical URL, OG URL, and sitemap entry Astro
-// generates. It MUST match wherever this build is actually deployed —
-// currently the temporary Cloudflare Pages preview, NOT
-// creativedynastyevents.com. That domain is still live with the existing
-// Wix site; pointing canonical URLs at it here would falsely claim this
-// unfinished, unapproved build as the canonical version of a page that
-// isn't even this content. Update this the moment (and not before) the
-// production domain is actually connected — see HANDOFF.md governing
-// rules ("do not connect the production domain").
+// generates. Updated 2026-10-28: the owner approved connecting the real
+// domain, and the Cloudflare zone's nameservers have already been switched
+// over (confirmed via DNS lookup — no MX/TXT records exist on this domain,
+// so there was no email to migrate). www is canonical, matching the
+// original Wix site's own canonical tag.
 //
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://creativedynasty.pages.dev',
+  site: 'https://www.creativedynastyevents.com',
   output: 'static',
   integrations: [sitemap()],
   vite: {
