@@ -32,7 +32,7 @@ export type Experience = {
 export const experiences: Experience[] = [
   {
     slug: "after-dark",
-    image: "/images/experiences/after-dark.svg",
+    image: "/images/experiences/after-dark.jpg",
     emoji: "❤️‍🔥",
     name: "After Dark Experience",
     tagline: "Bold. Expressive. Unforgettable.",
@@ -67,7 +67,7 @@ export const experiences: Experience[] = [
   },
   {
     slug: "little-creators",
-    image: "/images/experiences/little-creators.svg",
+    image: "/images/experiences/little-creators.jpg",
     emoji: "🎨",
     name: "Little Creators Experience",
     tagline: "Creative moments for families to connect and grow.",
@@ -92,7 +92,7 @@ export const experiences: Experience[] = [
   },
   {
     slug: "the-collective",
-    image: "/images/experiences/the-collective.svg",
+    image: "/images/experiences/the-collective.jpg",
     emoji: "✨",
     name: "The Collective Experience",
     tagline: "Where creativity meets connection and collaboration.",
