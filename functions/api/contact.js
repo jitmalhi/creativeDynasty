@@ -35,7 +35,7 @@
  * what tripped it.
  */
 
-const DEFAULT_TO_EMAIL = "creativedynastevents3@gmail.com";
+const DEFAULT_TO_EMAIL = "creativedynastyevents3@gmail.com";
 const DEFAULT_FROM_EMAIL = "Creative Dynasty Website <onboarding@resend.dev>";
 
 // Fields to leave out of the forwarded email body (internal/meta, not
