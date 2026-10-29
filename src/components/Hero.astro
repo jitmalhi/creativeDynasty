@@ -1,16 +1,56 @@
+---
+// Hero carousel. Slides crossfade on a timer; dots let visitors pick a slide,
+// and autoplay is skipped for reduced-motion users and paused on hover/focus
+// and via the pause button (WCAG 2.2.2). Without JS the first slide shows.
+const slides = [
+  {
+    src: "/images/photos/hero-1000567347.jpg",
+    alt: "Children with face paint and a team member holding up their colorful paintings in front of a balloon arch at a Creative Dynasty event",
+    pos: "object-[50%_20%] sm:object-[center_20%]",
+  },
+  {
+    src: "/images/photos/C-1000509590.jpg",
+    alt: "Three guests smiling and holding up their finished paintings at a Creative Dynasty event",
+    pos: "object-[50%_30%] sm:object-[center_30%]",
+  },
+  {
+    src: "/images/photos/E-1000624201.jpg",
+    alt: "Two guests seated at painting easels, one smiling, during a Creative Dynasty paint night",
+    pos: "object-[50%_40%] sm:object-[center_40%]",
+  },
+  {
+    src: "/images/photos/B-1000512326.jpg",
+    alt: "Two guests holding up their wine-glass paintings at a paint night",
+    pos: "object-[50%_30%] sm:object-[center_30%]",
+  },
+];
+---
+
 <section id="top" class="relative flex min-h-[92svh] items-end overflow-hidden bg-deep-slate sm:min-h-screen sm:items-center">
   <!--
-    Real Creative Dynasty photograph (owner-approved, 2026-10-05). The
-    overlay is a light, bottom-weighted dark gradient so the photograph
-    stays the hero and the white text stays readable. Object position keeps
-    the guest's face in frame on portrait mobile crops and wide desktop crops.
+    Real Creative Dynasty photographs (owner-approved). The overlay is a
+    light, bottom-weighted dark gradient so the photographs stay the hero
+    and the white text stays readable.
   -->
-  <img
-    src="/images/photos/A-1000444433.jpg"
-    alt="Guest smiling beside her tulip painting at a Creative Dynasty paint night"
-    class="absolute inset-x-0 bottom-0 top-14 h-auto w-full object-cover object-[72%_center] sm:inset-0 sm:h-full sm:object-[center_4%]"
-    fetchpriority="high"
-  />
+  <div data-hero-carousel>
+    {
+      slides.map((slide, i) => (
+        <img
+          src={slide.src}
+          alt={slide.alt}
+          data-slide
+          class:list={[
+            "absolute inset-x-0 bottom-0 top-14 h-auto w-full object-cover transition-opacity duration-1000 sm:inset-0 sm:h-full",
+            slide.pos,
+            i === 0 ? "opacity-100" : "opacity-0",
+          ]}
+          loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : "auto"}
+          aria-hidden={i === 0 ? "false" : "true"}
+        />
+      ))
+    }
+  </div>
   <div class="absolute inset-0 bg-gradient-to-t from-deep-slate from-35% via-deep-slate/85 via-55% to-transparent sm:bg-gradient-to-r sm:from-deep-slate/75 sm:via-deep-slate/35 sm:via-55% sm:to-transparent" aria-hidden="true"></div>
 
   <div class="relative mx-auto w-full max-w-6xl px-6 pb-16 pt-32 text-left sm:pb-0 sm:pt-0 lg:px-10">
@@ -42,4 +82,102 @@
       </a>
     </div>
   </div>
+
+  <div class="absolute bottom-6 right-6 z-10 flex items-center gap-3 sm:bottom-8 lg:right-10" data-hero-controls hidden>
+    <div class="flex items-center gap-1" role="group" aria-label="Choose hero photo">
+      {
+        slides.map((_, i) => (
+          <button
+            type="button"
+            data-dot={i}
+            aria-label={`Show photo ${i + 1} of ${slides.length}`}
+            class="flex h-6 w-6 items-center justify-center"
+          >
+            <span class="block h-2 w-2 rounded-full bg-white/50 transition-colors [[aria-current=true]>&]:bg-white"></span>
+          </button>
+        ))
+      }
+    </div>
+    <button
+      type="button"
+      data-pause
+      aria-pressed="false"
+      aria-label="Pause photo rotation"
+      class="rounded-full border border-white/60 px-3 py-1 text-xs font-semibold text-white transition-colors hover:border-peach hover:text-peach"
+    >
+      Pause
+    </button>
+  </div>
 </section>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-hero-carousel]");
+  const controls = document.querySelector<HTMLElement>("[data-hero-controls]");
+  if (root && controls) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>("[data-slide]"));
+    const dots = Array.from(controls.querySelectorAll<HTMLElement>("[data-dot]"));
+    const pauseBtn = controls.querySelector<HTMLButtonElement>("[data-pause]")!;
+    const section = root.closest("section")!;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let current = 0;
+    let timer: number | undefined;
+    let userPaused = reduced;
+    let hovering = false;
+
+    const show = (n: number) => {
+      current = (n + slides.length) % slides.length;
+      slides.forEach((el, i) => {
+        el.classList.toggle("opacity-100", i === current);
+        el.classList.toggle("opacity-0", i !== current);
+        el.setAttribute("aria-hidden", String(i !== current));
+      });
+      dots.forEach((d, i) => d.setAttribute("aria-current", String(i === current)));
+    };
+    const stop = () => {
+      window.clearInterval(timer);
+      timer = undefined;
+    };
+    const start = () => {
+      stop();
+      if (!userPaused && !hovering) timer = window.setInterval(() => show(current + 1), 6000);
+    };
+    const syncPause = () => {
+      pauseBtn.textContent = userPaused ? "Play" : "Pause";
+      pauseBtn.setAttribute("aria-pressed", String(userPaused));
+      pauseBtn.setAttribute("aria-label", userPaused ? "Play photo rotation" : "Pause photo rotation");
+    };
+
+    dots.forEach((d, i) =>
+      d.addEventListener("click", () => {
+        show(i);
+        start();
+      }),
+    );
+    pauseBtn.addEventListener("click", () => {
+      userPaused = !userPaused;
+      syncPause();
+      start();
+    });
+    section.addEventListener("mouseenter", () => {
+      hovering = true;
+      stop();
+    });
+    section.addEventListener("mouseleave", () => {
+      hovering = false;
+      start();
+    });
+    section.addEventListener("focusin", () => {
+      hovering = true;
+      stop();
+    });
+    section.addEventListener("focusout", () => {
+      hovering = false;
+      start();
+    });
+
+    controls.hidden = false;
+    show(0);
+    syncPause();
+    start();
+  }
+</script>

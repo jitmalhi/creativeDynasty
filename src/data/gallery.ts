@@ -11,7 +11,7 @@ export type GalleryItem = {
 // date grouping where she supplied one. No names, no invented captions.
 //
 // The first item is the feature image (landscape, shown full width). The
-// rest form the supporting grid. The hero photo (A-1000444433) is not
+// rest form the supporting grid. The hero photo (hero-1000567347) is not
 // repeated here.
 export const gallery: GalleryItem[] = [
   {
